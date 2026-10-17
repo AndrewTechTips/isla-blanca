@@ -1,7 +1,8 @@
 # Design assets
 
 Original-resolution assets taken from two free Framer Marketplace templates, used as the visual
-base for this project. Downloaded 2026-10-17.
+base for this project. Downloaded 2026-10-17. They live in `frontend/public/images/` and are
+served from `/images/...`, the same paths the database seed uses.
 
 | Source | Author | Live preview | License |
 |---|---|---|---|
@@ -17,7 +18,7 @@ Keep the credit in the README and the site footer.
 
 The resort in this project is called **Isla Blanca**, after Ibiza's nickname "la Isla Blanca"
 (the White Isle). The template's name "Aurelia" must not appear in the UI:
-`aurelia/brand/logo-aurelia.svg` is the template's wordmark and is kept only as a reference.
+`brand/logo-aurelia.svg` is the template's wordmark and is kept only as a reference.
 Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacing, gold
 `#b99a6b`).
 
@@ -46,14 +47,14 @@ Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacin
 
 ## Where each file is used in the original template
 
-### `aurelia/brand/`
+### `brand/`
 | File | Original section |
 |---|---|
 | `logo-aurelia.svg` | Navbar logo (all pages) |
 | `signature.svg` | Home › About: "Guest Experience Manager" signature |
 | `noise-texture.png` | Grain overlay on top of hero photos (256×256 tile) |
 
-### `aurelia/home/`
+### `home/`
 | File | Size | Original section |
 |---|---|---|
 | `hero.jpg` | 2720×1760 | Home › Hero background ("Experience Timeless Luxury" + booking form) |
@@ -65,7 +66,7 @@ Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacin
 | `reviews-bg.jpg` | 2720×1760 | Reviews section background (Home, Rooms, Services, room pages) |
 | `mobile-menu-bg.jpg` | 1755×896 | Mobile navigation overlay |
 
-### `aurelia/rooms/`
+### `rooms/`
 | File | Original use |
 |---|---|
 | `tropical-garden-suite.jpg` | Room card + hero of `/rooms/tropical-garden-suite` (85 m², king bed, 6 guests, from $239) |
@@ -74,26 +75,26 @@ Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacin
 | `coastal-breeze-suite.jpg` | Room card on `/rooms` |
 | `executive-ocean-residence.jpg` | Room card on `/rooms`; also in the gallery |
 | `private-garden-villa.jpg` | Room card on `/rooms` |
-| `detail-01.jpg`, `detail-02.png`, `detail-03.png` | Photo strip on every room detail page; also in the gallery |
+| `detail-01.jpg`, `detail-02.jpg`, `detail-03.jpg` | Photo strip on every room detail page; also in the gallery |
 
 All room photos are 1536×1024.
 
-### `aurelia/gallery/`
+### `gallery/`
 | File | Original use |
 |---|---|
 | `gallery-01.jpg` … `gallery-05.jpg` | Home › "A Glimpse of Aurelia" grid + Gallery page (`gallery-05` is also the Contact form background) |
 | `gallery-06.jpg` | Gallery page only |
 
-The Gallery page also reuses `services/hero.png`, `rooms/infinity-pool-villa.jpg`,
+The Gallery page also reuses `services/hero.jpg`, `rooms/infinity-pool-villa.jpg`,
 `rooms/executive-ocean-residence.jpg` and the three `rooms/detail-*` photos.
 
-### `aurelia/services/`
+### `services/`
 | File | Original use |
 |---|---|
-| `hero.png` | Services › Hero background ("Where Luxury Feels Natural") |
+| `hero.jpg` | Services › Hero background ("Where Luxury Feels Natural"). Not used by us: the template's "AURELIA RESORT" sign is part of the photo |
 | `service-01.jpg`, `service-02.jpg` | Services › service cards |
 
-### `aurelia/icons/`
+### `icons/`
 Single-color line icons. The template paints them with CSS `mask` in the gold accent color,
 so they can be recolored freely.
 
@@ -117,12 +118,12 @@ so they can be recolored freely.
 ### `sereno/`
 | File | Size | Use |
 |---|---|---|
-| `panorama-360.png` | 6000×3000, 5.8 MB | Equirectangular panorama for the 360° room tour (Photo Sphere Viewer) |
-| `panorama-360-small.png` | 1774×887 | Low-res version to show while the full panorama loads |
+| `panorama-360.jpg` | 4096×2048, 1.9 MB | Equirectangular panorama for the 360° room tour (Photo Sphere Viewer) |
+| `panorama-360-small.jpg` | 1774×887 | Low-res version to show while the full panorama loads |
 
-## Before shipping
+## Optimisation done
 
-- Convert the large PNGs (`panorama-360.png`, `services/hero.png`, `rooms/detail-0*.png`) to
-  WebP/AVIF; the site should not ship 5.8 MB images.
-- Six rooms are not enough for realistic seed data. Reuse these photos across more rooms, or
-  add new images in the same style.
+- PNG photos converted to JPEG (quality 82): `rooms/detail-02`, `rooms/detail-03`,
+  `services/hero`, both panoramas.
+- The panorama was resized from 6000×3000 (5.8 MB PNG) to 4096×2048 (1.9 MB JPEG), the
+  largest texture size every GPU supports.

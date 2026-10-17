@@ -32,7 +32,7 @@ ROOMS = [
         "size_m2": 85,
         "bed_type": BedType.KING,
         "max_guests": 6,
-        "images": ["tropical-garden-suite.jpg", "detail-01.jpg", "detail-02.png"],
+        "images": ["tropical-garden-suite.jpg", "detail-01.jpg", "detail-02.jpg"],
         "amenities": ALL_AMENITIES,
     },
     {
@@ -49,7 +49,7 @@ ROOMS = [
         "bed_type": BedType.KING,
         "max_guests": 4,
         "panorama_url": "/images/sereno/panorama-360.jpg",
-        "images": ["infinity-pool-villa.jpg", "detail-03.png", "detail-01.jpg"],
+        "images": ["infinity-pool-villa.jpg", "detail-03.jpg", "detail-01.jpg"],
         "amenities": ALL_AMENITIES,
     },
     {
@@ -64,7 +64,7 @@ ROOMS = [
         "size_m2": 57,
         "bed_type": BedType.QUEEN,
         "max_guests": 2,
-        "images": ["sunset-premium-ocean-suite.jpg", "detail-02.png"],
+        "images": ["sunset-premium-ocean-suite.jpg", "detail-02.jpg"],
         "amenities": [*ESSENTIALS, "minibar", "bathrobes"],
     },
     {
@@ -79,7 +79,7 @@ ROOMS = [
         "size_m2": 59,
         "bed_type": BedType.QUEEN,
         "max_guests": 2,
-        "images": ["coastal-breeze-suite.jpg", "detail-03.png"],
+        "images": ["coastal-breeze-suite.jpg", "detail-03.jpg"],
         "amenities": [*ESSENTIALS, "bathrobes"],
     },
     {
@@ -94,7 +94,7 @@ ROOMS = [
         "size_m2": 140,
         "bed_type": BedType.KING,
         "max_guests": 6,
-        "images": ["executive-ocean-residence.jpg", "detail-01.jpg", "detail-02.png"],
+        "images": ["executive-ocean-residence.jpg", "detail-01.jpg", "detail-02.jpg"],
         "amenities": ALL_AMENITIES,
     },
     {
@@ -109,7 +109,7 @@ ROOMS = [
         "size_m2": 110,
         "bed_type": BedType.KING,
         "max_guests": 4,
-        "images": ["private-garden-villa.jpg", "detail-03.png"],
+        "images": ["private-garden-villa.jpg", "detail-03.jpg"],
         "amenities": ALL_AMENITIES,
     },
     {
@@ -124,7 +124,7 @@ ROOMS = [
         "size_m2": 48,
         "bed_type": BedType.DOUBLE,
         "max_guests": 2,
-        "images": ["detail-01.jpg", "detail-02.png"],
+        "images": ["detail-01.jpg", "detail-02.jpg"],
         "amenities": ESSENTIALS,
     },
     {
@@ -139,7 +139,7 @@ ROOMS = [
         "size_m2": 52,
         "bed_type": BedType.QUEEN,
         "max_guests": 3,
-        "images": ["detail-02.png", "detail-03.png"],
+        "images": ["detail-02.jpg", "detail-03.jpg"],
         "amenities": [*ESSENTIALS, "minibar"],
     },
     {
@@ -154,7 +154,7 @@ ROOMS = [
         "size_m2": 64,
         "bed_type": BedType.KING,
         "max_guests": 2,
-        "images": ["detail-03.png", "detail-01.jpg"],
+        "images": ["detail-03.jpg", "detail-01.jpg"],
         "amenities": ALL_AMENITIES,
     },
     {
@@ -169,7 +169,7 @@ ROOMS = [
         "size_m2": 95,
         "bed_type": BedType.DOUBLE,
         "max_guests": 5,
-        "images": ["detail-02.png", "detail-01.jpg", "detail-03.png"],
+        "images": ["detail-02.jpg", "detail-01.jpg", "detail-03.jpg"],
         "amenities": [*ESSENTIALS, "in-room-dining", "minibar"],
     },
 ]
