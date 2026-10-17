@@ -47,5 +47,9 @@ class Room(IdMixin, TimestampMixin, Base):
     # to PostgreSQL instead of the ORM nulling out room_id, so booked rooms can't be deleted.
     bookings: Mapped[list["Booking"]] = relationship(back_populates="room", passive_deletes="all")
 
+    @property
+    def cover_image(self) -> str | None:
+        return self.images[0].url if self.images else None
+
     def __repr__(self) -> str:
         return f"<Room {self.id} {self.slug}>"

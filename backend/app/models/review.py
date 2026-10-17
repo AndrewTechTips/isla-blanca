@@ -27,3 +27,9 @@ class Review(IdMixin, TimestampMixin, Base):
     comment: Mapped[str] = mapped_column(Text)
 
     booking: Mapped["Booking"] = relationship(back_populates="review")
+
+    @property
+    def author_name(self) -> str:
+        """Public display name, e.g. "Sofia C."."""
+        profile = self.booking.user.profile
+        return f"{profile.first_name} {profile.last_name[:1]}."

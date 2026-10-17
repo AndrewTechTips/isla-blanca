@@ -76,5 +76,18 @@ class Booking(IdMixin, TimestampMixin, Base):
     def nights(self) -> int:
         return (self.check_out - self.check_in).days
 
+    @property
+    def can_cancel(self) -> bool:
+        """Guests can cancel an active booking until the day before arrival."""
+        active = self.status in (BookingStatus.PENDING, BookingStatus.CONFIRMED)
+        return active and self.check_in > date.today()
+
+    @property
+    def can_review(self) -> bool:
+        """A stay can be reviewed once it has ended, if it wasn't cancelled."""
+        ended = self.check_out <= date.today()
+        valid = self.status in (BookingStatus.CONFIRMED, BookingStatus.COMPLETED)
+        return ended and valid and self.review is None
+
     def __repr__(self) -> str:
         return f"<Booking {self.reference} room={self.room_id} {self.check_in}→{self.check_out}>"

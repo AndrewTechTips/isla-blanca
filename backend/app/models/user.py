@@ -31,5 +31,9 @@ class User(IdMixin, TimestampMixin, Base):
     # 1-n: a user makes many bookings (deletion is blocked by the database while any exist).
     bookings: Mapped[list["Booking"]] = relationship(back_populates="user", passive_deletes="all")
 
+    @property
+    def full_name(self) -> str:
+        return self.profile.full_name
+
     def __repr__(self) -> str:
         return f"<User {self.id} {self.email}>"
