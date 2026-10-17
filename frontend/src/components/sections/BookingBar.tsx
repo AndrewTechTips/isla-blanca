@@ -2,12 +2,9 @@ import { type FormEvent, useId, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/Button'
-import { useApi } from '@/hooks/useApi'
-import { api } from '@/lib/api/client'
+import { useRooms } from '@/lib/api/queries/catalog'
 import { cn } from '@/lib/cn'
-
-const toISODate = (date: Date) => date.toISOString().slice(0, 10)
-const addDays = (date: Date, days: number) => new Date(date.getTime() + days * 86_400_000)
+import { addDays, today as todayISO } from '@/lib/dates'
 
 const fieldClass =
   'h-10 w-full rounded-[5px] bg-white/10 px-3 text-xs text-cream outline-none transition-colors placeholder:text-cream/70 focus:bg-white/15'
@@ -36,22 +33,28 @@ interface BookingBarProps {
 export function BookingBar({ className, roomSlug }: BookingBarProps) {
   const id = useId()
   const navigate = useNavigate()
-  const [today] = useState(() => new Date())
+  const [today] = useState(todayISO)
   const [room, setRoom] = useState(roomSlug ?? '')
-  const [checkIn, setCheckIn] = useState(toISODate(addDays(today, 14)))
-  const [checkOut, setCheckOut] = useState(toISODate(addDays(today, 17)))
+  const [checkIn, setCheckIn] = useState(() => addDays(today, 14))
+  const [checkOut, setCheckOut] = useState(() => addDays(today, 17))
   const [adults, setAdults] = useState(2)
   const [children, setChildren] = useState(0)
-  const rooms = useApi('booking-bar-rooms', (signal) => api.rooms.search({ size: 50 }, signal))
+  const rooms = useRooms({ size: 50 })
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
-    const params = new URLSearchParams({
-      check_in: checkIn,
-      check_out: checkOut,
-      guests: String(adults + children),
-    })
-    navigate(room ? `/rooms/${room}?${params}` : `/rooms?${params}`)
+    const stay = { check_in: checkIn, check_out: checkOut }
+    if (room) {
+      // A chosen room goes straight to the booking page with the party size.
+      const params = new URLSearchParams({
+        ...stay,
+        adults: String(adults),
+        children: String(children),
+      })
+      navigate(`/book/${room}?${params}`)
+    } else {
+      navigate(`/rooms?${new URLSearchParams({ ...stay, guests: String(adults + children) })}`)
+    }
   }
 
   return (
@@ -85,12 +88,11 @@ export function BookingBar({ className, roomSlug }: BookingBarProps) {
           id={`${id}-in`}
           type="date"
           required
-          min={toISODate(today)}
+          min={today}
           value={checkIn}
           onChange={(event) => {
             setCheckIn(event.target.value)
-            if (event.target.value >= checkOut)
-              setCheckOut(toISODate(addDays(new Date(event.target.value), 1)))
+            if (event.target.value >= checkOut) setCheckOut(addDays(event.target.value, 1))
           }}
           className={fieldClass}
         />
@@ -100,7 +102,7 @@ export function BookingBar({ className, roomSlug }: BookingBarProps) {
           id={`${id}-out`}
           type="date"
           required
-          min={toISODate(addDays(new Date(checkIn), 1))}
+          min={addDays(checkIn, 1)}
           value={checkOut}
           onChange={(event) => setCheckOut(event.target.value)}
           className={fieldClass}

@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { Link, useParams } from 'react-router'
+import { Link, useParams, useSearchParams } from 'react-router'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { BookingBar } from '@/components/sections/BookingBar'
@@ -8,15 +8,18 @@ import { Faq } from '@/components/sections/Faq'
 import { PageHero } from '@/components/sections/PageHero'
 import { Reviews } from '@/components/sections/Reviews'
 import { RoomsShowcase } from '@/components/sections/RoomsShowcase'
+import { ButtonLink } from '@/components/ui/Button'
 import { MaskIcon } from '@/components/ui/MaskIcon'
-import { useApi } from '@/hooks/useApi'
+import { PanoramaTour } from '@/features/rooms/PanoramaTour'
+import { RoomReviews } from '@/features/rooms/RoomReviews'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import { api, ApiError } from '@/lib/api/client'
+import { ApiError } from '@/lib/api/client'
+import { useRoom } from '@/lib/api/queries/catalog'
 import type { RoomDetail } from '@/lib/api/types'
 import { formatBed, formatGuests, formatPrice } from '@/lib/format'
 import { inViewOnce, spring } from '@/lib/motion'
 
-function RoomInfo({ room }: { room: RoomDetail }) {
+function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
   const [main, ...rest] = room.images
 
   return (
@@ -38,10 +41,16 @@ function RoomInfo({ room }: { room: RoomDetail }) {
               </li>
             </ul>
           </div>
-          <p className="self-start rounded-[5px] bg-sage px-4 py-2.5 font-sans text-sm font-extrabold tracking-[0.2em]">
-            <span className="text-gold-light">From </span>
-            <span className="text-cream">{formatPrice(room.price_per_night)}</span>
-          </p>
+          <div className="flex flex-wrap items-center gap-3 self-start">
+            <p className="rounded-[5px] bg-sage px-4 py-2.5 font-sans text-sm font-extrabold tracking-[0.2em]">
+              <span className="text-gold-light">From </span>
+              <span className="text-cream">{formatPrice(room.price_per_night)}</span>
+              <span className="text-cream/70"> / night</span>
+            </p>
+            <ButtonLink to={bookHref} variant="gold">
+              Book This Room
+            </ButtonLink>
+          </div>
         </div>
 
         {main && (
@@ -101,6 +110,17 @@ function RoomInfo({ room }: { room: RoomDetail }) {
   )
 }
 
+/** Carries dates and party size from a search on to the booking page. */
+function bookingLink(slug: string, search: URLSearchParams) {
+  const params = new URLSearchParams()
+  for (const key of ['check_in', 'check_out', 'adults', 'children']) {
+    const value = search.get(key)
+    if (value) params.set(key, value)
+  }
+  if (!params.has('adults') && search.get('guests')) params.set('adults', search.get('guests')!)
+  return `/book/${slug}${params.size ? `?${params}` : ''}`
+}
+
 function RoomNotFound() {
   return (
     <section className="bg-forest section-y pt-40 text-center text-sand">
@@ -116,10 +136,11 @@ function RoomNotFound() {
 
 export function RoomDetailPage() {
   const { slug = '' } = useParams()
-  const room = useApi(`room-${slug}`, (signal) => api.rooms.get(slug, signal))
+  const [searchParams] = useSearchParams()
+  const room = useRoom(slug)
   usePageTitle(room.data?.name)
 
-  if (room.status === 'error') {
+  if (room.isError) {
     return room.error instanceof ApiError && room.error.status === 404 ? (
       <RoomNotFound />
     ) : (
@@ -129,7 +150,7 @@ export function RoomDetailPage() {
     )
   }
 
-  if (room.status === 'loading') {
+  if (room.isPending) {
     return <div className="min-h-svh animate-pulse bg-forest" aria-busy="true" />
   }
 
@@ -142,9 +163,13 @@ export function RoomDetailPage() {
         text={room.data.tagline}
         footer={<BookingBar roomSlug={room.data.slug} />}
       />
-      <RoomInfo room={room.data} />
+      <RoomInfo room={room.data} bookHref={bookingLink(room.data.slug, searchParams)} />
+      {room.data.panorama_url && (
+        <PanoramaTour panorama={room.data.panorama_url} roomName={room.data.name} />
+      )}
       <CtaBand />
       <RoomsShowcase title="Other Rooms" excludeSlug={room.data.slug} />
+      <RoomReviews slug={room.data.slug} roomName={room.data.name} />
       <Reviews />
       <Faq />
     </>

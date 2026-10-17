@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  /** Full API base URL in production, e.g. https://isla-blanca-api.onrender.com/api/v1 */
+  /** API origin in production, e.g. https://isla-blanca-api.onrender.com (no /api/v1). */
   readonly VITE_API_URL?: string
 }
 

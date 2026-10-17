@@ -2,8 +2,7 @@ import { Reveal } from '@/components/motion/Reveal'
 import { RoomCard, RoomCardSkeleton } from '@/components/rooms/RoomCard'
 import { ArrowLink } from '@/components/ui/ArrowLink'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useApi } from '@/hooks/useApi'
-import { api } from '@/lib/api/client'
+import { useRooms } from '@/lib/api/queries/catalog'
 import { spring } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
@@ -15,7 +14,7 @@ interface RoomsShowcaseProps {
 
 /** "Featured Rooms" on the home page, "Other Rooms" on a room page. */
 export function RoomsShowcase({ title = 'Featured Rooms', excludeSlug }: RoomsShowcaseProps) {
-  const rooms = useApi('showcase-rooms', (signal) => api.rooms.search({ size: 4 }, signal))
+  const rooms = useRooms({ size: 4 })
   const items = rooms.data?.items.filter((room) => room.slug !== excludeSlug).slice(0, 3)
 
   return (
@@ -41,8 +40,8 @@ export function RoomsShowcase({ title = 'Featured Rooms', excludeSlug }: RoomsSh
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {items
             ? items.map((room, index) => <RoomCard key={room.id} room={room} index={index} />)
-            : rooms.status === 'loading' && [0, 1, 2].map((n) => <RoomCardSkeleton key={n} />)}
-          {rooms.status === 'error' && (
+            : rooms.isPending && [0, 1, 2].map((n) => <RoomCardSkeleton key={n} />)}
+          {rooms.isError && (
             <p className="text-ink">Rooms are unavailable right now. Please try again shortly.</p>
           )}
         </div>

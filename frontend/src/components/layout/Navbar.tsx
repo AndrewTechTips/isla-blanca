@@ -1,11 +1,12 @@
-import { MapPin, Menu, Phone } from 'lucide-react'
+import { CircleUserRound, MapPin, Menu, Phone } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useCallback, useState } from 'react'
-import { NavLink } from 'react-router'
+import { Link, NavLink } from 'react-router'
 
 import { Logo } from '@/components/brand/Logo'
 import { MobileMenu } from '@/components/layout/MobileMenu'
 import { navigation, site } from '@/data/site'
+import { useAuth } from '@/features/auth/useAuth'
 import { cn } from '@/lib/cn'
 import { hoverSpring } from '@/lib/motion'
 
@@ -34,6 +35,21 @@ function NavItem({ label, to }: { label: string; to: string }) {
   )
 }
 
+/** "Sign In", or the guest's first name linking to their account (staff go to the admin). */
+export function AccountLink({ className }: { className?: string }) {
+  const { user, isAdmin, status } = useAuth()
+  if (status === 'loading') return null
+  return (
+    <Link
+      to={user ? (isAdmin ? '/admin' : '/account') : '/login'}
+      className={cn('inline-flex items-center gap-2 font-sans whitespace-nowrap', className)}
+    >
+      <CircleUserRound className="size-4" strokeWidth={1.5} />
+      {user ? (isAdmin ? 'Staff Area' : user.profile.first_name) : 'Sign In'}
+    </Link>
+  )
+}
+
 export function Navbar({ variant }: { variant: NavbarVariant }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = useCallback(() => setMenuOpen(false), [])
@@ -59,17 +75,18 @@ export function Navbar({ variant }: { variant: NavbarVariant }) {
         </nav>
 
         <div className="hidden items-center gap-6 text-caption text-[13px] font-semibold tracking-[0.15em] normal-case lg:flex">
-          <span className="inline-flex items-center gap-2 font-sans">
+          <span className="hidden items-center gap-2 font-sans whitespace-nowrap 2xl:inline-flex">
             <MapPin className="size-4" strokeWidth={1.5} />
             {site.location}
           </span>
           <a
             href={`tel:${site.phone.replaceAll(' ', '')}`}
-            className="inline-flex items-center gap-2 font-sans"
+            className="hidden items-center gap-2 font-sans whitespace-nowrap xl:inline-flex"
           >
             <Phone className="size-4" strokeWidth={1.5} />
             {site.phone}
           </a>
+          <AccountLink className="rounded-full border border-white/50 px-4 py-2 transition-colors hover:bg-white/15" />
         </div>
 
         <button

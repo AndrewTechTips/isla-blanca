@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router'
 
 import { Logo } from '@/components/brand/Logo'
+import { AccountLink } from '@/components/layout/Navbar'
 import { navigation, site } from '@/data/site'
 import { spring, tween } from '@/lib/motion'
 
@@ -86,6 +87,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           </nav>
 
           <div className="relative container-site space-y-1 pb-10 text-sm text-sand">
+            <AccountLink className="mb-4 text-base text-cream" />
             <p>{site.location}</p>
             <a href={`tel:${site.phone.replaceAll(' ', '')}`} className="block">
               {site.phone}

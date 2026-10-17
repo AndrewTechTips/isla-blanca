@@ -44,7 +44,7 @@ export function Logo({ className, size = 'md' }: LogoProps) {
       <SunMark className={cn('text-gold', size === 'lg' ? 'h-8 w-11' : 'h-6 w-9')} />
       <span
         className={cn(
-          'font-serif leading-none font-medium tracking-[0.16em] uppercase',
+          'font-serif leading-none font-medium tracking-[0.16em] whitespace-nowrap uppercase',
           size === 'lg' ? 'text-[26px]' : 'text-[21px]',
         )}
       >

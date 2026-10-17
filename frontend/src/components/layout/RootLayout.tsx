@@ -11,7 +11,10 @@ export interface RouteHandle {
 
 export function RootLayout() {
   const matches = useMatches()
-  const handle = matches.at(-1)?.handle as RouteHandle | undefined
+  // The deepest route that says how the navbar should look (child routes inherit it).
+  const handle = matches
+    .map((match) => match.handle as RouteHandle | undefined)
+    .findLast((h) => h?.navbar)
 
   return (
     // Respect the visitor's "reduce motion" setting for every animation in the app.

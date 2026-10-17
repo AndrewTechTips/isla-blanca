@@ -4,9 +4,8 @@ import { RoomCard, RoomCardSkeleton } from '@/components/rooms/RoomCard'
 import { Faq } from '@/components/sections/Faq'
 import { Reviews } from '@/components/sections/Reviews'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useApi } from '@/hooks/useApi'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import { api } from '@/lib/api/client'
+import { useRooms } from '@/lib/api/queries/catalog'
 import { formatGuests } from '@/lib/format'
 import { sketch } from '@/lib/sketch'
 
@@ -21,9 +20,7 @@ export function RoomsPage() {
   const guests = Number(searchParams.get('guests')) || undefined
   const search = searchParams.toString()
 
-  const rooms = useApi(`rooms?${search}`, (signal) =>
-    api.rooms.search({ check_in: checkIn, check_out: checkOut, guests, size: 24 }, signal),
-  )
+  const rooms = useRooms({ check_in: checkIn, check_out: checkOut, guests, size: 24 })
 
   return (
     <>
@@ -49,16 +46,16 @@ export function RoomsPage() {
             )}
           </div>
 
-          {rooms.status === 'error' && (
+          {rooms.isError && (
             <p className="text-ink">Rooms are unavailable right now. Please try again shortly.</p>
           )}
-          {rooms.status === 'success' && rooms.data.items.length === 0 && (
+          {rooms.isSuccess && rooms.data.items.length === 0 && (
             <p className="text-ink">
               Every room is booked for these dates. Try different dates or fewer guests.
             </p>
           )}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {rooms.status === 'loading'
+            {rooms.isPending
               ? [0, 1, 2, 3, 4, 5].map((n) => <RoomCardSkeleton key={n} />)
               : rooms.data?.items.map((room, index) => (
                   <RoomCard

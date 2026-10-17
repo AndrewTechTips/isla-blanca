@@ -5,12 +5,14 @@ import { Link } from 'react-router'
 import { cn } from '@/lib/cn'
 import { hoverSpring } from '@/lib/motion'
 
-type Variant = 'sage' | 'gold' | 'ghost'
+type Variant = 'sage' | 'gold' | 'ghost' | 'outline'
 
 const styles: Record<Variant, { base: string; hover: string }> = {
   sage: { base: 'bg-sage text-cream', hover: '#79a383' },
   gold: { base: 'bg-gold text-forest', hover: '#dbae69' },
   ghost: { base: 'border border-white/70 text-white', hover: 'rgba(248, 245, 240, 0.3)' },
+  /** Secondary action on light backgrounds. */
+  outline: { base: 'border border-ink/25 text-ink', hover: 'rgba(238, 231, 221, 0.9)' },
 }
 
 interface ButtonContentProps {
@@ -66,7 +68,12 @@ export function Button({ children, variant, className, ...props }: ButtonProps) 
   return (
     <motion.button
       {...useButtonMotion(variant)}
-      className={cn(baseClass, styles[variant].base, 'cursor-pointer', className)}
+      className={cn(
+        baseClass,
+        styles[variant].base,
+        'cursor-pointer disabled:cursor-not-allowed disabled:opacity-50',
+        className,
+      )}
       {...props}
     >
       <RollingLabel>{children}</RollingLabel>
