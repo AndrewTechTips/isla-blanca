@@ -4,8 +4,8 @@ Measured from the live Aurelia template (https://aurelia-template.framer.website
 2026-10-17, so the frontend can reproduce it 1:1 before we improve on it. Colors, fonts and
 the asset map are in [`assets/ASSETS.md`](../assets/ASSETS.md).
 
-Values marked **TBD (Remix)** can only be read from the Framer editor: animation durations,
-easing and spring settings.
+Animation timings come from our Remix of the template in the Framer editor and the matching
+values in the published page.
 
 ## Breakpoints
 
@@ -116,31 +116,50 @@ full-section backgrounds: `home/about-bg.jpg`, `home/rooms-section-bg.jpg`,
 
 ## Animations
 
-Initial states were read from the live page. Every reveal is triggered once, when the element
-enters the viewport.
+Every reveal runs once, when the element enters the viewport. "Spring 2s / 0.2" means a
+time-based spring, which maps 1:1 to Motion: `{ type: "spring", duration: 2, bounce: 0.2 }`.
+Framer's default ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 
-| Where | Effect | From → To |
+### On page load (hero)
+| Element | From | Transition |
 |---|---|---|
-| Hero photo | Slow zoom-out on load | `scale(1.2)` → `scale(1)` |
-| Hero eyebrow | Fade up | `opacity 0, y 40px` → visible |
-| Hero title | Fade up | `opacity 0, y 30px` → visible |
-| Hero text, booking bar | Fade in | `opacity 0` → `1` |
-| Nav links | Underline on hover | `scaleX(0)` → `scaleX(1)` |
-| Form inputs | Underline on focus | `scale(0)` → `scale(1)` |
-| Buttons (About Us, All Rooms, Book Now, Get in Touch) | Fade in | `opacity 0` → `1` |
-| CTA band sentence | Word-by-word reveal, staggered | each word `opacity 0, y 10px, blur(10px)` → sharp |
-| Room cards | Drop in **from above**, staggered | `opacity 0, y −40px` → visible |
-| Service icons | 3D flip | `rotateY(90deg)` → `0` |
-| Service card text | Fade in | `opacity 0` → `1` |
-| Gallery photos | Scroll-linked assemble | `opacity 0.5`, scattered offsets, `scale(0.3–0.6)`, `rotate(±10–30deg)` → final collage |
-| Reviews photo | Zoom | `scale(1.2)` → `scale(1)` |
-| Review quote, stars, source | Fade up | `opacity 0, y 30–40px` → visible |
-| Review slider | Inactive slides blurred | `blur(5px)` + fade |
-| FAQ answer | Open with blur | `opacity 0, blur(10px)` → sharp; icon `rotate(180deg)` |
+| Hero photo | `scale 1.2` | tween 4s, `ease` |
+| Title | `opacity 0, y 30` | spring 2s / bounce 0.3, delay 0.5s |
+| Eyebrow ("Welcome to …") | `opacity 0, y 40` | spring 2s / bounce 0.2, delay 0.7s |
+| Paragraph | `opacity 0` | spring 2s / bounce 0.2, delay 1.0s |
+| Button + booking bar | `opacity 0` | spring 1s / bounce 0.2, delay 1.3s |
 
-**TBD (Remix):** duration or spring stiffness/damping for each row, stagger delays, and the
-scroll range of the gallery effect. Until then use a Motion spring of
-`{ type: "spring", stiffness: 120, damping: 20 }` and `0.08s` stagger for words and cards.
+### On scroll into view
+| Element | From | Transition |
+|---|---|---|
+| About background / arch frame | `opacity 0` | tween 1.3s, `ease` |
+| Buttons (About Us, All Rooms, Book Now, Get in Touch) | `opacity 0` | spring 1s / bounce 0.2, delay 0.5–1.3s |
+| CTA band sentence | each **word** `opacity 0, y 10, blur(10px)` | spring 1.5s / bounce 0, delay 0.05s per word |
+| Room cards | `opacity 0, y −40` (drop from above) | spring 2s / bounce 0.2, delay `index × 0.4s` |
+| Service icon | `rotateY 90°` (3D flip) | spring 2s / bounce 0.5, delay 0.5s |
+| Service title, eyebrow, text | `opacity 0` | spring 2s / bounce 0, delays 0.5s, 0.8s, 1.1s |
+| Reviews photo | `scale 1.2` | tween 4s, `ease` |
+| Review quote | `opacity 0, y 30` | spring 2s / bounce 0.3, delay 0.5s |
+| Review stars and source | `opacity 0, y 40` | spring 2s / bounce 0.2, delay 0.7s |
+
+### Scroll-linked
+| Element | Effect |
+|---|---|
+| Gallery photos | Each photo starts scattered and maps to its final place as the section scrolls through the viewport (`useScroll` on the section + `useTransform`). Start states: `opacity .5, rotate −10°, scale .5, x −30, y −121` · `rotate 10°, scale .5, x 20, y −122` · `rotate 30°, scale .6, x −10, y −121` · `rotate 10°, scale .3, x −40, y 69` · `rotate −10°, scale .4, y 79` → `opacity 1, rotate 0, scale 1, x 0, y 0` |
+| Services card stack | Cards stack while scrolling, smoothed with a spring `{ stiffness: 500, damping: 60 }` |
+
+### Interactions
+| Element | Effect | Transition |
+|---|---|---|
+| Sage button hover | background `#6f7f73` → `#79a383` | spring 0.4s / bounce 0.2 |
+| Gold button hover | background `#b99a6b` → `#dbae69` | spring 0.4s / bounce 0.2 |
+| Ghost button hover | background → `rgba(248,245,240,.3)` | spring 0.4s / bounce 0.2 |
+| Button label | Label rolls up to a duplicate on hover | spring 0.4s / bounce 0.2 |
+| Nav link hover | text `opacity .5` → `1`, underline `scaleX 0` → `1` | spring 0.4s / bounce 0.2 |
+| Form input focus | underline `scale 0` → `1` | spring 0.4s / bounce 0.2 |
+| FAQ row open | answer `opacity 0, blur(10px)` → sharp; plus icon lines rotate 90° / 180° into a minus | spring 0.4s / bounce 0.2 |
+| Review slider | inactive quotes `blur(5px)`, active `blur(0)` | tween 0.7s, `ease` |
+| Gallery photo click | lightbox over `rgba(0,0,0,.8)`, max width 960px, padding 20px | tween 0.7s, `ease` |
 
 ## Implementation notes
 
