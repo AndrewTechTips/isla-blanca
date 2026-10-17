@@ -1,4 +1,8 @@
-"""Small builders for test data. Each returns an object already added to the session."""
+"""Small builders for test data.
+
+Each builder commits. Inside the test transaction a commit only releases a savepoint, so the
+data still disappears after the test, but survives rollbacks done by the code under test.
+"""
 
 from datetime import date, timedelta
 from decimal import Decimal
@@ -6,22 +10,54 @@ from itertools import count
 
 from sqlalchemy.orm import Session
 
-from app.models import BedType, Booking, BookingStatus, PricingUnit, Profile, Room, Service, User
+from app.core.security import create_access_token, hash_password
+from app.models import (
+    Amenity,
+    BedType,
+    Booking,
+    BookingStatus,
+    PricingUnit,
+    Profile,
+    Room,
+    RoomImage,
+    Service,
+    User,
+    UserRole,
+)
+
+TEST_PASSWORD = "correct-horse-battery"
 
 _sequence = count(1)
 
 
 def make_user(db: Session, **overrides) -> User:
     n = next(_sequence)
+    password = overrides.pop("password", None)
     user = User(
         email=overrides.pop("email", f"guest{n}@islablanca.test"),
-        password_hash="not-a-real-hash",
+        password_hash=hash_password(password) if password else "not-a-real-hash",
         profile=Profile(first_name="Test", last_name=f"Guest {n}"),
         **overrides,
     )
     db.add(user)
-    db.flush()
+    db.commit()
     return user
+
+
+def make_admin(db: Session) -> User:
+    return make_user(db, role=UserRole.ADMIN)
+
+
+def auth_headers(user: User) -> dict[str, str]:
+    token, _ = create_access_token(user.id)
+    return {"Authorization": f"Bearer {token}"}
+
+
+def make_amenity(db: Session, slug: str) -> Amenity:
+    amenity = Amenity(slug=slug, name=slug.replace("-", " ").title(), icon=f"amenity-{slug}")
+    db.add(amenity)
+    db.commit()
+    return amenity
 
 
 def make_room(db: Session, **overrides) -> Room:
@@ -34,18 +70,22 @@ def make_room(db: Session, **overrides) -> Room:
         price_per_night=overrides.pop("price_per_night", Decimal("200.00")),
         size_m2=40,
         bed_type=BedType.QUEEN,
-        max_guests=2,
+        max_guests=overrides.pop("max_guests", 2),
+        images=overrides.pop(
+            "images",
+            [RoomImage(url=f"/images/rooms/room-{n}.jpg", alt_text=f"Room {n}", position=0)],
+        ),
         **overrides,
     )
     db.add(room)
-    db.flush()
+    db.commit()
     return room
 
 
 def make_service(db: Session, **overrides) -> Service:
     n = next(_sequence)
     service = Service(
-        slug=f"service-{n}",
+        slug=overrides.pop("slug", f"service-{n}"),
         name=f"Service {n}",
         description="A service used in tests.",
         price=overrides.pop("price", Decimal("50.00")),
@@ -53,7 +93,7 @@ def make_service(db: Session, **overrides) -> Service:
         **overrides,
     )
     db.add(service)
-    db.flush()
+    db.commit()
     return service
 
 
@@ -76,5 +116,5 @@ def make_booking(
         total_price=room.price_per_night * nights,
     )
     db.add(booking)
-    db.flush()
+    db.commit()
     return booking

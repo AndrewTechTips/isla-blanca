@@ -66,7 +66,13 @@ def db(engine: Engine) -> Iterator[Session]:
 
 @pytest.fixture
 def client(db: Session) -> Iterator[TestClient]:
-    app.dependency_overrides[get_db] = lambda: db
+    def request_session() -> Iterator[Session]:
+        # In production every request gets a fresh session. Expiring the shared test session
+        # gives each request the same view: everything is reloaded from the database.
+        db.expire_all()
+        yield db
+
+    app.dependency_overrides[get_db] = request_session
     with TestClient(app) as test_client:
         yield test_client
     app.dependency_overrides.clear()

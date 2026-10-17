@@ -57,7 +57,7 @@ def test_user_and_room_have_many_bookings(db: Session) -> None:
 
 
 def test_room_images_are_ordered_and_deleted_with_the_room(db: Session) -> None:
-    room = make_room(db)
+    room = make_room(db, images=[])
     room.images = [
         RoomImage(url="/images/b.jpg", alt_text="b", position=1),
         RoomImage(url="/images/a.jpg", alt_text="a", position=0),
