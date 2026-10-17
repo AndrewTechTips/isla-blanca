@@ -1,0 +1,40 @@
+[project]
+name = "isla-blanca-api"
+version = "0.1.0"
+description = "REST API for the Isla Blanca resort booking platform"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.20.0",
+    "fastapi[standard]>=0.143.3",
+    "psycopg[binary]>=3.3.6",
+    "pwdlib[argon2]>=0.3.1",
+    "pydantic-settings>=2.16.0",
+    "sqlalchemy>=2.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "N"]
+
+[tool.ruff.lint.isort]
+# The local `alembic/` folder would otherwise make ruff treat the alembic package as first-party.
+known-third-party = ["alembic"]
+known-first-party = ["app"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = [
+    # Raised inside FastAPI's TestClient import, not by our code.
+    "ignore::DeprecationWarning:fastapi.testclient",
+    "ignore:Using `httpx` with `starlette.testclient`",
+]
