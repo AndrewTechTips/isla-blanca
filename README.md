@@ -23,11 +23,12 @@ isla-blanca/
 ├── backend/                 FastAPI REST API
 │   ├── alembic/             database migrations
 │   ├── app/
-│   │   ├── api/             HTTP layer: routers and endpoints (/api/v1/...)
-│   │   ├── core/            settings and security (password hashing)
+│   │   ├── api/             HTTP layer: routes and shared dependencies (/api/v1/...)
+│   │   ├── core/            settings, security (JWT, Argon2) and error handling
 │   │   ├── db/              SQLAlchemy base, session, demo seed
 │   │   ├── models/          ORM models, one file per table
-│   │   └── services/        business rules (pricing, ...)
+│   │   ├── schemas/         Pydantic request and response models
+│   │   └── services/        business rules: bookings, pricing, availability, stats
 │   └── tests/               pytest suite, runs against a real PostgreSQL
 ├── docker/                  container setup (PostgreSQL init scripts)
 ├── docs/                    database diagram, design spec
@@ -51,7 +52,8 @@ uv run python -m app.db.seed         # demo rooms, guests and bookings
 uv run fastapi dev app/main.py       # API on http://localhost:8000
 ```
 
-Interactive API docs: http://localhost:8000/docs
+Interactive API docs: http://localhost:8000/docs (use **Authorize** with a demo account from
+`.env` to try the protected routes).
 
 ```bash
 uv run pytest                        # tests (use the isla_blanca_test database)
@@ -60,6 +62,7 @@ uv run ruff check . && uv run ruff format --check .
 
 ## Documentation
 
+- [API: architecture, endpoints, booking rules, errors](docs/api.md)
 - [Database: diagram, relations and constraints](docs/database.md)
 - [Design spec: layout, typography, animations](docs/design-spec.md)
 
