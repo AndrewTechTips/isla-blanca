@@ -19,7 +19,6 @@ Final project for the Web Application Development course.
 
 ```
 isla-blanca/
-├── assets/                  design assets from the original template (assets/ASSETS.md)
 ├── backend/                 FastAPI REST API
 │   ├── alembic/             database migrations
 │   ├── app/
@@ -31,15 +30,17 @@ isla-blanca/
 │   │   └── services/        business rules: bookings, pricing, availability, stats
 │   └── tests/               pytest suite, runs against a real PostgreSQL
 ├── docker/                  container setup (PostgreSQL init scripts)
-├── docs/                    database diagram, design spec
-├── frontend/                React application (coming next)
+├── docs/                    API, database, frontend, design spec, assets
+├── frontend/                React + TypeScript single-page app
+│   ├── public/images/       photos, icons and video from the template
+│   └── src/                 pages, sections, UI components, API client, theme
 ├── docker-compose.yml
 └── .env.example
 ```
 
 ## Getting started
 
-Requirements: Docker and [uv](https://docs.astral.sh/uv/).
+Requirements: Docker, [uv](https://docs.astral.sh/uv/) and Node.js 22+.
 
 ```bash
 cp .env.example .env                 # local settings and demo passwords
@@ -60,11 +61,21 @@ uv run pytest                        # tests (use the isla_blanca_test database)
 uv run ruff check . && uv run ruff format --check .
 ```
 
+Then the website, in a second terminal:
+
+```bash
+cd frontend
+npm install
+npm run dev                          # http://localhost:5173
+```
+
 ## Documentation
 
+- [Frontend: structure, design system, pages](docs/frontend.md)
 - [API: architecture, endpoints, booking rules, errors](docs/api.md)
 - [Database: diagram, relations and constraints](docs/database.md)
 - [Design spec: layout, typography, animations](docs/design-spec.md)
+- [Design assets: sources, license, where each file is used](docs/assets.md)
 
 ## Credits
 
