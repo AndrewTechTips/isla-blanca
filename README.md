@@ -10,7 +10,7 @@ Final project for the Web Application Development course.
 
 | Layer | Technology |
 |---|---|
-| Frontend | React, TypeScript, Vite, React Router, Tailwind CSS, Motion |
+| Frontend | React 19, TypeScript, Vite, React Router, TanStack Query, Tailwind CSS 4, Motion |
 | Backend | Python 3.13, FastAPI, SQLAlchemy 2, Alembic, Pydantic, uv |
 | Database | PostgreSQL 18 |
 | Deployment | Docker, GitHub Pages (frontend), Render (API) |
@@ -67,7 +67,11 @@ Then the website, in a second terminal:
 cd frontend
 npm install
 npm run dev                          # http://localhost:5173
+npm test                             # frontend tests (Vitest)
 ```
+
+Demo accounts (admin and guests) are listed in `.env.example`; sign in as the admin to open the
+staff dashboard at `/admin`.
 
 ## Documentation
 
