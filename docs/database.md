@@ -130,6 +130,6 @@ Every table except the two link tables and `room_images` also has `created_at` a
 ## Demo data
 
 `uv run python -m app.db.seed` (or `--reset`) creates 10 rooms with 24 photos, 8 amenities,
-5 services, an admin and two guests with profiles, and 5 bookings (completed with reviews,
-confirmed, pending and cancelled) with dates relative to the day the seed runs. Demo
+5 services, an admin and two guests with profiles, and 6 bookings (completed with and without
+a review, confirmed, pending and cancelled) with dates relative to the day the seed runs. Demo
 credentials come from `.env` (see `.env.example`).

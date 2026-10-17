@@ -17,11 +17,9 @@ MAX_AVAILABILITY_DAYS = 366
 
 
 @router.get("", response_model=Page[RoomSummary], summary="Search rooms")
-def search_rooms(
-    filters: Annotated[RoomSearch, Query()], db: DbSession, pagination: Pagination
-) -> Page[RoomSummary]:
+def search_rooms(filters: Annotated[RoomSearch, Query()], db: DbSession) -> Page[RoomSummary]:
     """Active rooms, optionally only those free for the given dates and party size."""
-    return rooms.search(db, filters, pagination)
+    return rooms.search(db, filters, filters.pagination)
 
 
 @router.get("/{slug}", response_model=RoomDetail, responses=NOT_FOUND, summary="Room details")

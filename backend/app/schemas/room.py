@@ -7,7 +7,7 @@ from pydantic import Field, model_validator
 
 from app.models.enums import BedType
 from app.schemas.catalog import AmenityRead
-from app.schemas.common import Schema
+from app.schemas.common import PageParams, Schema
 from app.schemas.types import LongText, NonEmptyText, PositiveMoney, ShortText, Slug, Url
 
 
@@ -102,7 +102,11 @@ class RoomUpdate(Schema):
 
 
 class RoomSearch(Schema):
-    """Query filters for the public room list."""
+    """Query filters for the public room list.
+
+    Paging lives here too: FastAPI only lists a query model's fields as separate parameters
+    in the OpenAPI schema when the model is the endpoint's only query parameter.
+    """
 
     check_in: date | None = None
     check_out: date | None = None
@@ -111,6 +115,12 @@ class RoomSearch(Schema):
     max_price: Annotated[Decimal, Field(ge=0)] | None = None
     amenities: list[str] = []
     sort: RoomSort = RoomSort.RECOMMENDED
+    page: Annotated[int, Field(ge=1, description="Page number, starting at 1")] = 1
+    size: Annotated[int, Field(ge=1, le=100, description="Items per page")] = 12
+
+    @property
+    def pagination(self) -> PageParams:
+        return PageParams(page=self.page, size=self.size)
 
     @model_validator(mode="after")
     def check_ranges(self) -> "RoomSearch":

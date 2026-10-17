@@ -269,6 +269,17 @@ BOOKINGS = [
         },
     },
     {
+        # A finished stay that hasn't been reviewed yet: the guest can review it.
+        "guest": "sofia.carter@islablanca.test",
+        "room": "es-vedra-sunset-suite",
+        "starts_in_days": -9,
+        "nights": 3,
+        "adults": 2,
+        "children": 0,
+        "status": "completed",
+        "services": ["sunset-dining"],
+    },
+    {
         "guest": "sofia.carter@islablanca.test",
         "room": "infinity-pool-villa",
         "starts_in_days": 14,
