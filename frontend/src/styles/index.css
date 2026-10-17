@@ -1,0 +1,198 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens, measured from the Aurelia template (docs/design-spec.md).
+ * Breakpoints match Framer's layouts: phone < 810px, tablet 810–1199px, desktop ≥ 1200px.
+ */
+@theme {
+  --breakpoint-md: 50.625rem; /* 810px */
+  --breakpoint-lg: 75rem; /* 1200px */
+
+  --color-gold: #b99a6b;
+  --color-gold-light: #dbae69;
+  --color-forest: #1e2a24;
+  --color-forest-2: #223029;
+  --color-sage: #6f7f73;
+  --color-green: #79a383;
+  --color-cream: #f8f5f0;
+  --color-sand: #eee7dd;
+  --color-ink: #222222;
+  --color-ink-soft: #5a5a5a;
+  --color-black: #1c1d1c;
+
+  --font-serif: 'Cormorant Garamond', 'Cormorant Garamond Placeholder', Georgia, serif;
+  --font-sans: Manrope, 'Manrope Placeholder', system-ui, sans-serif;
+  --font-label: Inter, 'Inter Placeholder', system-ui, sans-serif;
+
+  --container-site: 73.75rem; /* 1180px */
+
+  --ease-framer: cubic-bezier(0.44, 0, 0.56, 1);
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-cream font-sans text-ink-soft;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: -0.02em;
+  }
+
+  ::selection {
+    @apply bg-gold text-white;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.85);
+    cursor: pointer;
+  }
+}
+
+/* ---- Typography roles (sizes per breakpoint come from the spec) ---------------------------- */
+
+@utility text-display {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  @media (width >= 50.625rem) {
+    font-size: 64px;
+  }
+  @media (width >= 75rem) {
+    font-size: 80px;
+  }
+}
+
+@utility text-heading {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 48px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  @media (width >= 75rem) {
+    font-size: 64px;
+  }
+}
+
+@utility text-subheading {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  @media (width >= 50.625rem) {
+    font-size: 28px;
+  }
+  @media (width >= 75rem) {
+    font-size: 36px;
+  }
+}
+
+@utility text-card-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  @media (width >= 75rem) {
+    font-size: 28px;
+  }
+}
+
+@utility text-quote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.4;
+  letter-spacing: -0.04em;
+  @media (width >= 50.625rem) {
+    font-size: 32px;
+  }
+  @media (width >= 75rem) {
+    font-size: 40px;
+  }
+}
+
+@utility text-eyebrow {
+  font-family: var(--font-label);
+  font-weight: 800;
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0.19em;
+  text-transform: uppercase;
+}
+
+@utility text-button {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.6;
+  letter-spacing: 0.133em;
+}
+
+@utility text-label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0.2em;
+}
+
+@utility text-caption {
+  font-family: var(--font-label);
+  font-weight: 800;
+  font-size: 10px;
+  line-height: 1.6;
+  letter-spacing: 0.19em;
+}
+
+/* ---- Layout helpers ------------------------------------------------------------------------- */
+
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+/* Vertical rhythm of standard sections: 64px on phone and tablet, 160px on desktop. */
+@utility section-y {
+  padding-block: 64px;
+  @media (width >= 75rem) {
+    padding-block: 160px;
+  }
+}
+
+/*
+ * Faint line-art illustration behind cream sections. Set the image with
+ * style={{ '--sketch': 'url(...)' }}; a cream veil keeps it as soft as in the template.
+ */
+@utility sketch-bg {
+  background-image:
+    linear-gradient(rgb(248 245 240 / 0.55), rgb(248 245 240 / 0.55)), var(--sketch, none);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Film grain over photos. */
+@utility grain {
+  background-image: url('/images/brand/noise-texture.png');
+  background-size: 128px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
