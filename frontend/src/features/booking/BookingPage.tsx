@@ -14,10 +14,9 @@ import { useCreateBooking, useQuote } from '@/lib/api/queries/bookings'
 import { useRoom, useRoomAvailability, useServices } from '@/lib/api/queries/catalog'
 import type { PricingUnit, RoomDetail, Service, StayRequest } from '@/lib/api/types'
 import { cn } from '@/lib/cn'
-import { addDays, formatRange, nightsBetween, rangesOverlap, today } from '@/lib/dates'
+import { addDays, formatRange, MAX_NIGHTS, nightsBetween, rangesOverlap, today } from '@/lib/dates'
 import { formatPrice } from '@/lib/format'
-
-const MAX_NIGHTS = 30
+import { photo } from '@/lib/images'
 
 const unitLabel: Record<PricingUnit, string> = {
   per_stay: 'per stay',
@@ -290,7 +289,7 @@ function BookingForm({ room }: { room: RoomDetail }) {
       <aside className="space-y-5 rounded-xl bg-forest p-6 text-sand lg:sticky lg:top-6">
         {room.cover_image && (
           <img
-            src={room.cover_image}
+            {...photo(room.cover_image, '(min-width: 1200px) 400px, 100vw')}
             alt=""
             className="aspect-[16/9] w-full rounded-lg object-cover"
           />

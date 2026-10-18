@@ -10,6 +10,7 @@ import { Reviews } from '@/components/sections/Reviews'
 import { RoomsShowcase } from '@/components/sections/RoomsShowcase'
 import { ButtonLink } from '@/components/ui/Button'
 import { MaskIcon } from '@/components/ui/MaskIcon'
+import { AvailabilityCalendar } from '@/features/rooms/AvailabilityCalendar'
 import { PanoramaTour } from '@/features/rooms/PanoramaTour'
 import { RoomReviews } from '@/features/rooms/RoomReviews'
 import { usePageTitle } from '@/hooks/usePageTitle'
@@ -115,11 +116,11 @@ function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
   )
 }
 
-/** Carries dates and party size from a search on to the booking page. */
-function bookingLink(slug: string, search: URLSearchParams) {
+/** Carries dates and party size from a search (or the calendar) on to the booking page. */
+function bookingLink(slug: string, search: URLSearchParams, dates?: Record<string, string>) {
   const params = new URLSearchParams()
   for (const key of ['check_in', 'check_out', 'adults', 'children']) {
-    const value = search.get(key)
+    const value = dates?.[key] ?? search.get(key)
     if (value) params.set(key, value)
   }
   if (!params.has('adults') && search.get('guests')) params.set('adults', search.get('guests')!)
@@ -169,6 +170,14 @@ export function RoomDetailPage() {
         footer={<BookingBar roomSlug={room.data.slug} />}
       />
       <RoomInfo room={room.data} bookHref={bookingLink(room.data.slug, searchParams)} />
+      <AvailabilityCalendar
+        slug={room.data.slug}
+        initialCheckIn={searchParams.get('check_in')}
+        initialCheckOut={searchParams.get('check_out')}
+        bookHref={(checkIn, checkOut) =>
+          bookingLink(room.data.slug, searchParams, { check_in: checkIn, check_out: checkOut })
+        }
+      />
       {room.data.panorama_url && (
         <PanoramaTour panorama={room.data.panorama_url} roomName={room.data.name} />
       )}

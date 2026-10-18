@@ -1,5 +1,8 @@
 /** Dates travel as "YYYY-MM-DD" strings, in the guest's local calendar (no time zones). */
 
+/** The longest stay the API accepts. */
+export const MAX_NIGHTS = 30
+
 export const toISODate = (date: Date) => {
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
