@@ -9,6 +9,7 @@ import { MaskIcon } from '@/components/ui/MaskIcon'
 import { experiences } from '@/data/content'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { cn } from '@/lib/cn'
+import { photo } from '@/lib/images'
 import { inViewOnce, spring } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
@@ -49,7 +50,7 @@ function ExperienceRow({
       >
         <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-t-full rounded-b-[170px] border border-gold/70" />
         <img
-          src={experience.image}
+          {...photo(experience.image, '340px')}
           alt=""
           loading="lazy"
           className="relative aspect-[340/520] w-full rounded-t-full rounded-b-[170px] object-cover"

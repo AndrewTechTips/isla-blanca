@@ -13,7 +13,8 @@
     "format:check": "prettier --check src",
     "api:types": "npx --yes openapi-typescript@7 http://localhost:8000/openapi.json -o src/lib/api/schema.d.ts && prettier --write src/lib/api/schema.d.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "images": "./scripts/optimize-images.sh"
   },
   "dependencies": {
     "@photo-sphere-viewer/core": "^5.15.1",

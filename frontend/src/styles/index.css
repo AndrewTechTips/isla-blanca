@@ -181,11 +181,15 @@
  * style={{ '--sketch': 'url(...)' }}; a cream veil keeps it as soft as in the template.
  */
 @utility sketch-bg {
-  background-image:
-    linear-gradient(rgb(248 245 240 / 0.55), rgb(248 245 240 / 0.55)), var(--sketch, none);
+  --sketch-veil: linear-gradient(rgb(248 245 240 / 0.55), rgb(248 245 240 / 0.55));
+  background-image: var(--sketch-veil), var(--sketch, none);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+
+  @media (width >= 50.625rem) {
+    background-image: var(--sketch-veil), var(--sketch-lg, var(--sketch, none));
+  }
 }
 
 /* Film grain over photos. */

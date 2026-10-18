@@ -15,6 +15,7 @@ import type { Booking } from '@/lib/api/types'
 import { cn } from '@/lib/cn'
 import { formatDay } from '@/lib/dates'
 import { formatPrice } from '@/lib/format'
+import { photo } from '@/lib/images'
 
 function CancelBooking({ booking }: { booking: Booking }) {
   const [open, setOpen] = useState(false)
@@ -164,7 +165,11 @@ export function BookingDetailPage() {
         <div className="space-y-8">
           <div className="overflow-hidden rounded-lg bg-white">
             {b.room.cover_image && (
-              <img src={b.room.cover_image} alt="" className="aspect-[21/9] w-full object-cover" />
+              <img
+                {...photo(b.room.cover_image, '(min-width: 1200px) 800px, 100vw')}
+                alt=""
+                className="aspect-[21/9] w-full object-cover"
+              />
             )}
             <div className="space-y-5 p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">

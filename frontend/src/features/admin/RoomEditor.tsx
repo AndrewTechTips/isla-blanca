@@ -10,6 +10,7 @@ import { ApiError } from '@/lib/api/client'
 import { useSaveRoom } from '@/lib/api/queries/admin'
 import { useAmenities } from '@/lib/api/queries/catalog'
 import type { BedType, RoomCreate, RoomDetail } from '@/lib/api/types'
+import { photo } from '@/lib/images'
 
 const BED_TYPES: BedType[] = ['single', 'double', 'queen', 'king']
 
@@ -205,7 +206,11 @@ export function RoomEditor({ room, onDone }: RoomEditorProps) {
         {images.map((image, index) => (
           <div key={index} className="flex flex-wrap items-center gap-2 sm:flex-nowrap">
             {image.url ? (
-              <img src={image.url} alt="" className="size-12 shrink-0 rounded object-cover" />
+              <img
+                {...photo(image.url, '48px')}
+                alt=""
+                className="size-12 shrink-0 rounded object-cover"
+              />
             ) : (
               <span className="size-12 shrink-0 rounded bg-sand" />
             )}

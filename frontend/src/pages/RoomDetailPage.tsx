@@ -17,6 +17,7 @@ import { ApiError } from '@/lib/api/client'
 import { useRoom } from '@/lib/api/queries/catalog'
 import type { RoomDetail } from '@/lib/api/types'
 import { formatBed, formatGuests, formatPrice } from '@/lib/format'
+import { photo } from '@/lib/images'
 import { inViewOnce, spring } from '@/lib/motion'
 
 function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
@@ -60,7 +61,11 @@ function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
               className="overflow-hidden rounded-lg md:row-span-2"
               transition={spring(1.5, 0.2)}
             >
-              <img src={main.url} alt={main.alt_text} className="size-full object-cover" />
+              <img
+                {...photo(main.url, '(min-width: 810px) 66vw, 100vw')}
+                alt={main.alt_text}
+                className="size-full object-cover"
+              />
             </Reveal>
             {rest.slice(0, 2).map((image, index) => (
               <Reveal
@@ -70,7 +75,7 @@ function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
                 transition={spring(1.5, 0.2, 0.15 * (index + 1))}
               >
                 <img
-                  src={image.url}
+                  {...photo(image.url, '(min-width: 810px) 33vw, 100vw')}
                   alt={image.alt_text}
                   loading="lazy"
                   className="aspect-[4/3] size-full object-cover"

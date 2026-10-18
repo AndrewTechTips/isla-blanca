@@ -1,0 +1,4 @@
+# Isla Blanca: the marketing pages are public; guest accounts and the staff area are not.
+User-agent: *
+Disallow: /account
+Disallow: /admin

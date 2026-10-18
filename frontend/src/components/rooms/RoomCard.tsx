@@ -5,6 +5,7 @@ import { ButtonLink } from '@/components/ui/Button'
 import { MaskIcon } from '@/components/ui/MaskIcon'
 import type { RoomSummary } from '@/lib/api/types'
 import { formatBed, formatGuests, formatPrice } from '@/lib/format'
+import { GRID_SIZES, photo } from '@/lib/images'
 import { hoverSpring, inViewOnce, spring } from '@/lib/motion'
 
 interface RoomCardProps {
@@ -29,7 +30,7 @@ export function RoomCard({ room, index = 0, search = '' }: RoomCardProps) {
       <Link to={href} className="relative block aspect-[372/248] overflow-hidden" tabIndex={-1}>
         {room.cover_image && (
           <motion.img
-            src={room.cover_image}
+            {...photo(room.cover_image, GRID_SIZES)}
             alt={room.name}
             loading="lazy"
             className="size-full object-cover"

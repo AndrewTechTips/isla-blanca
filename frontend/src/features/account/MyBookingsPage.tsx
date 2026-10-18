@@ -12,6 +12,7 @@ import { useMyBookings } from '@/lib/api/queries/bookings'
 import type { Booking } from '@/lib/api/types'
 import { formatRange, today } from '@/lib/dates'
 import { formatGuests, formatPrice } from '@/lib/format'
+import { photo } from '@/lib/images'
 
 function BookingRow({ booking }: { booking: Booking }) {
   return (
@@ -22,7 +23,7 @@ function BookingRow({ booking }: { booking: Booking }) {
       >
         {booking.room.cover_image && (
           <img
-            src={booking.room.cover_image}
+            {...photo(booking.room.cover_image, '(min-width: 640px) 200px, 100vw')}
             alt=""
             loading="lazy"
             className="aspect-[16/10] size-full object-cover sm:aspect-auto"

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { site } from '@/data/site'
 import { usePageTitle } from '@/hooks/usePageTitle'
+import { photo } from '@/lib/images'
 import { hero, tween } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
@@ -93,7 +94,7 @@ export function ContactPage() {
     <>
       <section className="relative isolate overflow-hidden pt-32 pb-16 md:pb-24">
         <motion.img
-          src="/images/gallery/gallery-05.jpg"
+          {...photo('/images/gallery/gallery-05.jpg')}
           alt=""
           className="absolute inset-0 -z-10 size-full object-cover"
           initial={{ scale: 1.2 }}

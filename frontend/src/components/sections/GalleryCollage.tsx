@@ -4,6 +4,7 @@ import { useRef } from 'react'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { galleryImages } from '@/data/content'
 import { cn } from '@/lib/cn'
+import { photo } from '@/lib/images'
 import { sketch } from '@/lib/sketch'
 
 /** Where each photo starts before the section scrolls into place (from the template). */
@@ -46,7 +47,12 @@ function CollagePhoto({
       className={cn('overflow-hidden rounded-lg shadow-xl shadow-black/10', layout[index])}
       style={{ opacity, rotate, scale, x, y }}
     >
-      <img src={src} alt={alt} loading="lazy" className="size-full object-cover" />
+      <img
+        {...photo(src, '(min-width: 810px) 40vw, 100vw')}
+        alt={alt}
+        loading="lazy"
+        className="size-full object-cover"
+      />
     </motion.figure>
   )
 }

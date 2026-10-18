@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Spinner } from '@/components/ui/PageLoader'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { photo } from '@/lib/images'
 
 interface PanoramaTourProps {
   panorama: string
@@ -75,7 +76,7 @@ export function PanoramaTour({ panorama, roomName }: PanoramaTourProps) {
           {state === 'idle' || state === 'error' ? (
             <>
               <img
-                src={previewOf(panorama)}
+                {...photo(previewOf(panorama), '(min-width: 1200px) 1200px, 100vw')}
                 alt=""
                 className="size-full object-cover opacity-70"
                 loading="lazy"

@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { photo } from '@/lib/images'
 import { hero } from '@/lib/motion'
 
 /** Dark card over a full-bleed photo, the same look as the contact form. */
@@ -20,7 +21,7 @@ export function AuthCard({
   return (
     <section className="relative isolate overflow-hidden pt-32 pb-16 md:min-h-svh md:pb-24">
       <motion.img
-        src="/images/gallery/gallery-01.jpg"
+        {...photo('/images/gallery/gallery-01.jpg')}
         alt=""
         className="absolute inset-0 -z-10 size-full object-cover"
         initial={{ scale: 1.2 }}

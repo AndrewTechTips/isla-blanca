@@ -11,6 +11,7 @@ import { useAdminRooms, useDeleteRoom } from '@/lib/api/queries/admin'
 import type { RoomDetail } from '@/lib/api/types'
 import { cn } from '@/lib/cn'
 import { formatGuests, formatPrice } from '@/lib/format'
+import { photo } from '@/lib/images'
 
 import { AdminHeader } from './AdminLayout'
 import { RoomEditor } from './RoomEditor'
@@ -74,7 +75,11 @@ export function AdminRoomsPage() {
               )}
             >
               {room.cover_image && (
-                <img src={room.cover_image} alt="" className="w-32 shrink-0 object-cover" />
+                <img
+                  {...photo(room.cover_image, '128px')}
+                  alt=""
+                  className="w-32 shrink-0 object-cover"
+                />
               )}
               <div className="flex min-w-0 flex-1 flex-col gap-2 py-4 pr-4">
                 <div className="flex items-start justify-between gap-2">

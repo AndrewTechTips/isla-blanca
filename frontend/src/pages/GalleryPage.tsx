@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { GalleryCollage } from '@/components/sections/GalleryCollage'
 import { galleryImages } from '@/data/content'
 import { usePageTitle } from '@/hooks/usePageTitle'
+import { photo } from '@/lib/images'
 import { inViewOnce, spring } from '@/lib/motion'
 
 const moreImages = [
@@ -31,7 +32,12 @@ export function GalleryPage() {
               viewport={inViewOnce}
               transition={spring(1.5, 0.2, (index % 3) * 0.15)}
             >
-              <img src={image.src} alt={image.alt} loading="lazy" className="w-full" />
+              <img
+                {...photo(image.src, '(min-width: 1200px) 33vw, (min-width: 640px) 50vw, 100vw')}
+                alt={image.alt}
+                loading="lazy"
+                className="w-full"
+              />
             </motion.li>
           ))}
         </ul>

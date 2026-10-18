@@ -5,6 +5,7 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { useAdminStats } from '@/lib/api/queries/admin'
 import type { BookingStatus } from '@/lib/api/types'
 import { formatPrice } from '@/lib/format'
+import { photo } from '@/lib/images'
 
 import { AdminHeader } from './AdminLayout'
 import { RevenueChart } from './RevenueChart'
@@ -94,7 +95,7 @@ export function DashboardPage() {
                     <div className="flex items-center gap-3">
                       {room.cover_image && (
                         <img
-                          src={room.cover_image}
+                          {...photo(room.cover_image, '40px')}
                           alt=""
                           className="size-10 rounded object-cover"
                         />
