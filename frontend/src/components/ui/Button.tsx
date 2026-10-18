@@ -8,7 +8,8 @@ import { hoverSpring } from '@/lib/motion'
 type Variant = 'sage' | 'gold' | 'ghost' | 'outline'
 
 const styles: Record<Variant, { base: string; hover: string }> = {
-  sage: { base: 'bg-sage text-cream', hover: '#79a383' },
+  // A deeper sage than the template's so the label passes WCAG AA; hover darkens instead of lightening.
+  sage: { base: 'bg-sage-deep text-cream', hover: '#4a584e' },
   gold: { base: 'bg-gold text-forest', hover: '#dbae69' },
   ghost: { base: 'border border-white/70 text-white', hover: 'rgba(248, 245, 240, 0.3)' },
   /** Secondary action on light backgrounds. */

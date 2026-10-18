@@ -10,6 +10,10 @@
 
   --color-gold: #b99a6b;
   --color-gold-light: #dbae69;
+  /* Text on cream, sand and white: the template's gold and sage are too light to read there
+     (2.5:1 and 3.9:1); these keep the hue and reach WCAG AA (4.5:1). */
+  --color-gold-deep: #7d6337;
+  --color-sage-deep: #58675c;
   --color-forest: #1e2a24;
   --color-forest-2: #223029;
   --color-sage: #6f7f73;

@@ -63,7 +63,7 @@ export function PanoramaTour({ panorama, roomName }: PanoramaTourProps) {
       <div className="container-site space-y-10">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="space-y-4">
-            <Eyebrow>The view 360°</Eyebrow>
+            <Eyebrow tone="dark">The view 360°</Eyebrow>
             <h2 className="text-heading text-cream">Step Inside</h2>
           </div>
           <p className="max-w-[380px]">

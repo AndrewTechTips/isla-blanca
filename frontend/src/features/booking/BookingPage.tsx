@@ -380,7 +380,7 @@ export function BookingPage() {
     return (
       <section className="section-y text-center">
         <p className="text-ink">This room isn’t available for booking.</p>
-        <Link to="/rooms" className="text-gold underline underline-offset-4">
+        <Link to="/rooms" className="text-gold-deep underline underline-offset-4">
           See all rooms
         </Link>
       </section>
@@ -395,7 +395,7 @@ export function BookingPage() {
           <h1 className="text-heading text-ink">Book {room.data.name}</h1>
           <Link
             to={`/rooms/${room.data.slug}`}
-            className="text-sm text-gold underline underline-offset-4"
+            className="text-sm text-gold-deep underline underline-offset-4"
           >
             ← Back to the room
           </Link>

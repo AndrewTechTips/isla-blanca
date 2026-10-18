@@ -32,7 +32,7 @@ function BookingRow({ booking }: { booking: Booking }) {
         <div className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-              <h3 className="text-card-title text-ink group-hover:text-gold">
+              <h3 className="text-card-title text-ink group-hover:text-gold-deep">
                 {booking.room.name}
               </h3>
               <StatusBadge status={booking.status} />
@@ -47,7 +47,7 @@ function BookingRow({ booking }: { booking: Booking }) {
                 {formatGuests(booking.adults + booking.children)}
               </span>
             </p>
-            <p className="text-caption text-sage">{booking.reference}</p>
+            <p className="text-caption text-sage-deep">{booking.reference}</p>
           </div>
           <p className="font-serif text-2xl font-semibold text-ink">
             {formatPrice(booking.total_price)}

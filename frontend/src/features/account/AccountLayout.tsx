@@ -29,7 +29,7 @@ export function AccountLayout() {
         <div className="container-site space-y-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="space-y-3">
-              <Eyebrow>{tierLabel[user.profile.membership_tier]}</Eyebrow>
+              <Eyebrow tone="dark">{tierLabel[user.profile.membership_tier]}</Eyebrow>
               <h1 className="text-heading text-cream">Welcome, {user.profile.first_name}</h1>
             </div>
             <button

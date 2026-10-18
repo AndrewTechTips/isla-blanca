@@ -274,7 +274,7 @@ export function RoomEditor({ room, onDone }: RoomEditorProps) {
         <button
           type="button"
           onClick={() => setImages((current) => [...current, { url: '', alt_text: '' }])}
-          className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-gold"
+          className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-gold-deep"
         >
           <Plus className="size-4" /> Add photo
         </button>

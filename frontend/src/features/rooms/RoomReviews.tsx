@@ -21,7 +21,11 @@ export function RoomReviews({ slug, roomName }: { slug: string; roomName: string
         <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {reviews.data.items.map((review) => (
             <li key={review.id} className="flex flex-col gap-4 rounded-lg bg-cream p-6">
-              <div className="flex gap-1 text-gold" aria-label={`${review.rating} out of 5 stars`}>
+              <div
+                className="flex gap-1 text-gold"
+                role="img"
+                aria-label={`${review.rating} out of 5 stars`}
+              >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <Star
                     key={n}
@@ -32,7 +36,7 @@ export function RoomReviews({ slug, roomName }: { slug: string; roomName: string
               </div>
               <h3 className="text-card-title text-ink">{review.title}</h3>
               <p className="flex-1">{review.comment}</p>
-              <p className="text-caption text-sage uppercase">
+              <p className="text-caption text-sage-deep uppercase">
                 {review.author_name} · {formatDate(review.created_at)}
               </p>
             </li>

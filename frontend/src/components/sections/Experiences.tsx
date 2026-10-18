@@ -47,7 +47,7 @@ export function Experiences() {
     <section className="bg-forest py-16 lg:py-30">
       <div className="container-site grid gap-12 lg:grid-cols-2">
         <div className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-          <Eyebrow>The Isla Blanca experience</Eyebrow>
+          <Eyebrow tone="dark">The Isla Blanca experience</Eyebrow>
           <h2 className="text-heading text-sand">Beyond Your Stay</h2>
           <p className="max-w-[440px] text-sand">
             From slow mornings at the spa to sunset dinners and private days at sea, every

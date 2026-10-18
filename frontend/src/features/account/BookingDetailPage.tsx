@@ -139,7 +139,7 @@ export function BookingDetailPage() {
     return (
       <div className="space-y-4">
         <Alert>{booking.error.message}</Alert>
-        <Link to="/account" className="text-gold underline underline-offset-4">
+        <Link to="/account" className="text-gold-deep underline underline-offset-4">
           Back to my bookings
         </Link>
       </div>
@@ -151,7 +151,7 @@ export function BookingDetailPage() {
 
   return (
     <div className="space-y-8">
-      <Link to="/account" className="text-sm text-gold underline underline-offset-4">
+      <Link to="/account" className="text-sm text-gold-deep underline underline-offset-4">
         ← My bookings
       </Link>
       {searchParams.has('created') && b.status === 'confirmed' && (
@@ -174,7 +174,7 @@ export function BookingDetailPage() {
             <div className="space-y-5 p-6">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h1 className="text-subheading text-ink">
-                  <Link to={`/rooms/${b.room.slug}`} className="hover:text-gold">
+                  <Link to={`/rooms/${b.room.slug}`} className="hover:text-gold-deep">
                     {b.room.name}
                   </Link>
                 </h1>
@@ -209,7 +209,11 @@ export function BookingDetailPage() {
           {b.review ? (
             <div className="space-y-3 rounded-lg bg-white p-6">
               <h2 className="text-card-title text-ink">Your review</h2>
-              <div className="flex gap-1 text-gold" aria-label={`${b.review.rating} out of 5`}>
+              <div
+                className="flex gap-1 text-gold"
+                role="img"
+                aria-label={`${b.review.rating} out of 5`}
+              >
                 {[1, 2, 3, 4, 5].map((n) => (
                   <Star
                     key={n}

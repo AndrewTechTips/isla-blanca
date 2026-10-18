@@ -36,7 +36,7 @@ export function AuthCard({
           transition={hero.title}
           className="mx-auto max-w-[480px] space-y-6 rounded-xl bg-forest/95 px-6 py-10 text-center text-sand md:px-12"
         >
-          <Eyebrow>{eyebrow}</Eyebrow>
+          <Eyebrow tone="dark">{eyebrow}</Eyebrow>
           <h1 className="text-heading font-medium text-cream">{title}</h1>
           <p>{text}</p>
           {children}

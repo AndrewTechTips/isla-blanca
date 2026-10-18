@@ -44,7 +44,7 @@ function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
             </ul>
           </div>
           <div className="flex flex-wrap items-center gap-3 self-start">
-            <p className="rounded-[5px] bg-sage px-4 py-2.5 font-sans text-sm font-extrabold tracking-[0.2em]">
+            <p className="rounded-[5px] bg-forest px-4 py-2.5 font-sans text-sm font-extrabold tracking-[0.2em]">
               <span className="text-gold-light">From </span>
               <span className="text-cream">{formatPrice(room.price_per_night)}</span>
               <span className="text-cream/70"> / night</span>

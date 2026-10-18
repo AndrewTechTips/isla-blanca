@@ -54,6 +54,8 @@ export function RoomsPage() {
               Every room is booked for these dates. Try different dates or fewer guests.
             </p>
           )}
+          {/* Keeps the outline in order: page title, then each room card's title. */}
+          <h2 className="sr-only">Rooms</h2>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {rooms.isPending
               ? [0, 1, 2, 3, 4, 5].map((n) => <RoomCardSkeleton key={n} />)

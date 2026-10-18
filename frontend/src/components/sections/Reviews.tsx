@@ -70,6 +70,7 @@ export function Reviews() {
               </motion.blockquote>
               <motion.div
                 className="flex gap-1 text-gold"
+                role="img"
                 initial={{ y: 40 }}
                 animate={{ y: 0 }}
                 transition={spring(2, 0.2, 0.2)}

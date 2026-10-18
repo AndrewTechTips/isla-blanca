@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 const styles: Record<BookingStatus, string> = {
   pending: 'bg-gold-light/25 text-[#7a5a1c]',
   confirmed: 'bg-green/20 text-forest',
-  completed: 'bg-sage/20 text-sage',
+  completed: 'bg-sage/20 text-sage-deep',
   cancelled: 'bg-ink/10 text-ink-soft',
 }
 

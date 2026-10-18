@@ -84,7 +84,7 @@ export function AdminRoomsPage() {
               <div className="flex min-w-0 flex-1 flex-col gap-2 py-4 pr-4">
                 <div className="flex items-start justify-between gap-2">
                   <h2 className="font-serif text-xl font-bold text-ink">
-                    <Link to={`/rooms/${room.slug}`} className="hover:text-gold">
+                    <Link to={`/rooms/${room.slug}`} className="hover:text-gold-deep">
                       {room.name}
                     </Link>
                   </h2>

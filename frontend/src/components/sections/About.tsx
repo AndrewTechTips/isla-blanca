@@ -38,7 +38,7 @@ export function About() {
             spaces, attentive service and an endless horizon make every stay one you carry home.
           </p>
           <img src="/images/brand/signature.svg" alt="" className="h-14 opacity-80" />
-          <p className="-mt-3 text-caption text-sage uppercase">Guest Experience Manager</p>
+          <p className="-mt-3 text-caption text-sage-deep uppercase">Guest Experience Manager</p>
           <Reveal transition={spring(1, 0.2, 0.5)}>
             <ButtonLink to="/services" variant="sage">
               About Us

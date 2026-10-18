@@ -108,7 +108,7 @@ export function ContactPage() {
             transition={hero.title}
             className="mx-auto max-w-[600px] space-y-6 rounded-xl bg-forest/95 px-6 py-10 text-center text-sand md:px-14"
           >
-            <Eyebrow>Contact</Eyebrow>
+            <Eyebrow tone="dark">Contact</Eyebrow>
             <h1 className="text-heading font-medium text-cream">Get in Touch</h1>
             <p>
               Planning a getaway, celebrating something special or just curious? Our team is here to

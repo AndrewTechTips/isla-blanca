@@ -30,7 +30,7 @@ export function AdminLayout() {
       <div className="container-site grid gap-8 lg:grid-cols-[220px_1fr]">
         <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
           <div>
-            <p className="text-eyebrow text-gold">Staff area</p>
+            <p className="text-eyebrow text-gold-deep">Staff area</p>
             <p className="text-sm">{user?.profile.full_name}</p>
           </div>
           <nav aria-label="Admin" className="-mx-1 flex gap-1 overflow-x-auto lg:flex-col">
