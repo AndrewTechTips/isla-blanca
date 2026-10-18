@@ -1,9 +1,11 @@
 import { Star } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { testimonials } from '@/data/content'
+import { useParallax } from '@/hooks/useParallax'
 import { cn } from '@/lib/cn'
+import { photo } from '@/lib/images'
 import { inViewOnce, spring, tween } from '@/lib/motion'
 
 const ROTATE_EVERY_MS = 7000
@@ -11,6 +13,9 @@ const ROTATE_EVERY_MS = 7000
 /** Full-bleed photo with one guest quote at a time; quotes rotate and can be picked. */
 export function Reviews() {
   const [active, setActive] = useState(0)
+  const section = useRef<HTMLElement>(null)
+  // The photo is taller than the section and drifts slower than the page.
+  const photoY = useParallax(section, '-12%', '12%')
 
   useEffect(() => {
     const timer = window.setTimeout(
@@ -24,20 +29,23 @@ export function Reviews() {
 
   return (
     <section
+      ref={section}
       className="relative isolate flex min-h-[506px] items-center overflow-hidden py-20 text-white md:min-h-[630px]"
       aria-roledescription="carousel"
       aria-label="Guest reviews"
     >
-      <motion.img
-        src="/images/home/reviews-bg.jpg"
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 -z-20 size-full object-cover"
-        initial={{ scale: 1.2 }}
-        whileInView={{ scale: 1 }}
-        viewport={inViewOnce}
-        transition={tween(4)}
-      />
+      <motion.div className="absolute inset-x-0 -top-[15%] -z-20 h-[130%]" style={{ y: photoY }}>
+        <motion.img
+          {...photo('/images/home/reviews-bg.jpg')}
+          alt=""
+          loading="lazy"
+          className="size-full object-cover"
+          initial={{ scale: 1.2 }}
+          whileInView={{ scale: 1 }}
+          viewport={inViewOnce}
+          transition={tween(4)}
+        />
+      </motion.div>
       <div className="absolute inset-0 -z-10 bg-black/50" />
 
       <div className="container-site flex flex-col items-center gap-6 text-center">

@@ -1,15 +1,22 @@
 import { motion } from 'motion/react'
+import { useRef } from 'react'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { ButtonLink } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { useParallax } from '@/hooks/useParallax'
 import { inViewOnce, spring, tween } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
 /** Home "More than just a destination": text block and a video in an arched frame. */
 export function About() {
+  const section = useRef<HTMLElement>(null)
+  // The arch rises a little faster than the text, and its gold outline lags behind it.
+  const archY = useParallax(section, 60, -60)
+  const outlineY = useParallax(section, -20, 20)
+
   return (
-    <section className="relative isolate overflow-hidden section-y">
+    <section ref={section} className="relative isolate overflow-hidden section-y">
       <motion.div
         aria-hidden="true"
         className="absolute inset-0 -z-10 sketch-bg"
@@ -44,20 +51,25 @@ export function About() {
           transition={spring(2, 0.2, 0.2)}
           className="relative mx-auto w-full max-w-[420px]"
         >
-          <div className="absolute inset-0 translate-x-3 translate-y-3 rounded-t-full border border-gold/70" />
-          <div className="relative aspect-[3/4] overflow-hidden rounded-t-full">
-            <video
-              className="size-full object-cover"
-              src="/images/home/about-video.mp4"
-              poster="/images/home/about-video-poster.jpg"
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-label="A guest relaxing by the infinity pool"
+          <motion.div style={{ y: archY }}>
+            <motion.div
+              className="absolute inset-0 translate-x-3 translate-y-3 rounded-t-full border border-gold/70"
+              style={{ y: outlineY }}
             />
-          </div>
+            <div className="relative aspect-[3/4] overflow-hidden rounded-t-full">
+              <video
+                className="size-full object-cover"
+                src="/images/home/about-video.mp4"
+                poster="/images/home/about-video-poster.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="A guest relaxing by the infinity pool"
+              />
+            </div>
+          </motion.div>
         </Reveal>
       </div>
     </section>

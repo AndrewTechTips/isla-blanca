@@ -1,9 +1,11 @@
 import { motion } from 'motion/react'
-import type { ReactNode } from 'react'
+import { type ReactNode, useRef } from 'react'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { useParallax } from '@/hooks/useParallax'
 import { cn } from '@/lib/cn'
+import { photo } from '@/lib/images'
 import { hero } from '@/lib/motion'
 
 interface PageHeroProps {
@@ -28,21 +30,29 @@ export function PageHero({
   footer,
   className,
 }: PageHeroProps) {
+  const section = useRef<HTMLElement>(null)
+  // The photo sinks at a third of the scroll speed as the page moves up over it.
+  const photoY = useParallax(section, '0%', '33%', 'away')
+
   return (
     <section
+      ref={section}
       className={cn(
         'relative isolate flex min-h-svh flex-col overflow-hidden text-white',
         className,
       )}
     >
-      <motion.img
-        src={image}
-        alt=""
-        className="absolute inset-0 -z-20 size-full object-cover"
-        initial={{ scale: 1.2 }}
-        animate={{ scale: 1 }}
-        transition={hero.photo}
-      />
+      <motion.div className="absolute inset-0 -z-20" style={{ y: photoY }}>
+        <motion.img
+          {...photo(image)}
+          fetchPriority="high"
+          alt=""
+          className="size-full object-cover"
+          initial={{ scale: 1.2 }}
+          animate={{ scale: 1 }}
+          transition={hero.photo}
+        />
+      </motion.div>
       <div className="grain absolute inset-0 -z-10" />
       <div className="absolute inset-0 -z-10 bg-linear-to-r from-black/45 via-black/15 to-transparent" />
       <div className="absolute inset-x-0 bottom-0 -z-10 h-1/2 bg-linear-to-t from-black/40 to-transparent" />

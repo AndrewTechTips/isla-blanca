@@ -1,11 +1,13 @@
 import { X } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router'
 
 import { Logo } from '@/components/brand/Logo'
 import { AccountLink } from '@/components/layout/Navbar'
 import { navigation, site } from '@/data/site'
+import { useScrollLock } from '@/hooks/useScrollLock'
+import { photo } from '@/lib/images'
 import { spring, tween } from '@/lib/motion'
 
 interface MobileMenuProps {
@@ -16,17 +18,20 @@ interface MobileMenuProps {
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const { pathname } = useLocation()
 
-  // Close when the route changes, and lock page scroll while open.
+  const closeButton = useRef<HTMLButtonElement>(null)
+
+  // Close when the route changes; lock page scroll and move focus inside while open.
   useEffect(onClose, [pathname]) // eslint-disable-line react-hooks/exhaustive-deps
+  useScrollLock(open)
   useEffect(() => {
     if (!open) return
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const opener = document.activeElement as HTMLElement | null
+    closeButton.current?.focus()
     const onKey = (event: KeyboardEvent) => event.key === 'Escape' && onClose()
     window.addEventListener('keydown', onKey)
     return () => {
-      document.body.style.overflow = previous
       window.removeEventListener('keydown', onKey)
+      opener?.focus() // back to the menu button
     }
   }, [open, onClose])
 
@@ -38,19 +43,21 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
           aria-modal="true"
           aria-label="Menu"
           className="fixed inset-0 z-50 flex flex-col bg-forest text-white lg:hidden"
+          data-lenis-prevent
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={tween(0.4)}
         >
           <img
-            src="/images/home/mobile-menu-bg.jpg"
+            {...photo('/images/home/mobile-menu-bg.jpg')}
             alt=""
             className="absolute inset-0 size-full object-cover opacity-25"
           />
           <div className="relative container-site flex h-[72px] items-center justify-between">
             <Logo />
             <button
+              ref={closeButton}
               type="button"
               onClick={onClose}
               className="grid size-11 cursor-pointer place-items-center rounded-full border border-white/80"

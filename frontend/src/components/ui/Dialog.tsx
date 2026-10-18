@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'motion/react'
 import { type ReactNode, useEffect, useId, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
+import { useScrollLock } from '@/hooks/useScrollLock'
 import { cn } from '@/lib/cn'
 import { tween } from '@/lib/motion'
 
@@ -15,21 +16,44 @@ interface DialogProps {
   size?: 'sm' | 'lg'
 }
 
-/** Accessible modal: focus moves inside, Escape and the backdrop close it, page scroll is locked. */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+/** Keeps Tab and Shift+Tab cycling inside the dialog. */
+function trapFocus(event: KeyboardEvent, container: HTMLElement) {
+  const focusable = [...container.querySelectorAll<HTMLElement>(FOCUSABLE)]
+  if (focusable.length === 0) return
+  const first = focusable[0]
+  const last = focusable[focusable.length - 1]
+  const active = document.activeElement
+  if (event.shiftKey && (active === first || active === container)) {
+    event.preventDefault()
+    last.focus()
+  } else if (!event.shiftKey && active === last) {
+    event.preventDefault()
+    first.focus()
+  }
+}
+
+/**
+ * Accessible modal: focus moves inside and stays there, Escape and the backdrop close it,
+ * page scrolling is locked.
+ */
 export function Dialog({ open, onClose, title, children, size = 'sm' }: DialogProps) {
   const titleId = useId()
   const panel = useRef<HTMLDivElement>(null)
 
+  useScrollLock(open)
   useEffect(() => {
     if (!open) return
     const previousFocus = document.activeElement as HTMLElement | null
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
     panel.current?.focus()
-    const onKey = (event: KeyboardEvent) => event.key === 'Escape' && onClose()
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+      if (event.key === 'Tab' && panel.current) trapFocus(event, panel.current)
+    }
     window.addEventListener('keydown', onKey)
     return () => {
-      document.body.style.overflow = previousOverflow
       window.removeEventListener('keydown', onKey)
       previousFocus?.focus()
     }
@@ -40,6 +64,7 @@ export function Dialog({ open, onClose, title, children, size = 'sm' }: DialogPr
       {open && (
         <motion.div
           className="fixed inset-0 z-50 overflow-y-auto bg-black/50"
+          data-lenis-prevent
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
