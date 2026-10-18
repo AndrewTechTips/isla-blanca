@@ -173,4 +173,5 @@ npm run api:types    # regenerate API types (needs the API running)
 npm run images       # WebP copies of new photos (needs cwebp: brew install webp)
 ```
 
-In production the API origin comes from `VITE_API_URL` (e.g. `https://…onrender.com`).
+In production the API origin comes from `VITE_API_URL` (e.g. `https://…onrender.com`) and the
+site's folder from `VITE_BASE` (see [deployment.md](deployment.md)).

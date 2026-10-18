@@ -13,7 +13,7 @@ Final project for the Web Application Development course.
 | Frontend | React 19, TypeScript, Vite, React Router, TanStack Query, Tailwind CSS 4, Motion |
 | Backend | Python 3.13, FastAPI, SQLAlchemy 2, Alembic, Pydantic, uv |
 | Database | PostgreSQL 18 |
-| Deployment | Docker, GitHub Pages (frontend), Render (API) |
+| Deployment | Docker, GitHub Actions, GitHub Pages (frontend), Render (API), Neon (database) |
 
 ## Project structure
 
@@ -29,12 +29,14 @@ isla-blanca/
 │   │   ├── schemas/         Pydantic request and response models
 │   │   └── services/        business rules: bookings, pricing, availability, stats
 │   └── tests/               pytest suite, runs against a real PostgreSQL
+├── .github/workflows/       CI (tests, lint, builds) and the GitHub Pages deploy
 ├── docker/                  container setup (PostgreSQL init scripts)
 ├── docs/                    API, database, frontend, design spec, assets
 ├── frontend/                React + TypeScript single-page app
 │   ├── public/images/       photos, icons and video from the template
 │   └── src/                 pages, sections, UI components, API client, theme
-├── docker-compose.yml
+├── docker-compose.yml       database for development, or the whole app in containers
+├── render.yaml              Render Blueprint for the API
 └── .env.example
 ```
 
@@ -73,8 +75,19 @@ npm test                             # frontend tests (Vitest)
 Demo accounts (admin and guests) are listed in `.env.example`; sign in as the admin to open the
 staff dashboard at `/admin`.
 
+### Everything in Docker
+
+```bash
+cp .env.example .env
+docker compose up --build            # site on http://localhost:8080, API on :8000
+```
+
+The API container applies the migrations and loads the demo data on its first start.
+Deployment to Neon, Render and GitHub Pages is described in [docs/deployment.md](docs/deployment.md).
+
 ## Documentation
 
+- [Deployment: Docker, CI, Render, GitHub Pages, Neon](docs/deployment.md)
 - [Frontend: structure, design system, pages](docs/frontend.md)
 - [API: architecture, endpoints, booking rules, errors](docs/api.md)
 - [Database: diagram, relations and constraints](docs/database.md)
