@@ -14,7 +14,8 @@ if config.config_file_name is not None:
 
 # A URL set programmatically (e.g. by the test suite) wins over the one from .env.
 if not config.get_main_option("sqlalchemy.url"):
-    config.set_main_option("sqlalchemy.url", str(get_settings().database_url))
+    # configparser treats "%" as interpolation; URL-encoded passwords contain it.
+    config.set_main_option("sqlalchemy.url", str(get_settings().database_url).replace("%", "%%"))
 
 target_metadata = Base.metadata
 
