@@ -4,6 +4,10 @@ Original-resolution assets taken from two free Framer Marketplace templates, use
 base for this project. Downloaded 2026-10-17. They live in `frontend/public/images/` and are
 served from `/images/...`, the same paths the database seed uses.
 
+Next to each photo, `npm run images` (in `frontend/`) writes WebP copies 800 and 1600 px wide
+(`hero-800.webp`, `hero-1600.webp`), which the site serves through `srcset`. The tables below
+list the originals only.
+
 | Source | Author | Live preview | License |
 |---|---|---|---|
 | [Aurelia Hotel](https://www.framer.com/marketplace/templates/aurelia-hotel/) | Slashdown | https://aurelia-template.framer.website/ | Framer Limited Commercial License (Free Content) |
