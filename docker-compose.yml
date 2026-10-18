@@ -1,3 +1,5 @@
+# Local development: `docker compose up -d db` (the API and the site run from source).
+# The whole app in containers: `docker compose up --build`, then open http://localhost:8080.
 name: isla-blanca
 
 services:
@@ -19,6 +21,36 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  api:
+    build: ./backend
+    container_name: isla-blanca-api
+    restart: unless-stopped
+    environment:
+      ENVIRONMENT: production
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-isla}:${POSTGRES_PASSWORD:-isla_dev_password}@db:5432/${POSTGRES_DB:-isla_blanca}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?set JWT_SECRET_KEY in .env}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-120}
+      # Fills an empty database with the demo rooms, services and accounts.
+      SEED_DEMO_DATA: "true"
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@islablanca.test}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?set SEED_ADMIN_PASSWORD in .env}
+      SEED_GUEST_PASSWORD: ${SEED_GUEST_PASSWORD:?set SEED_GUEST_PASSWORD in .env}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./frontend
+    container_name: isla-blanca-web
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    depends_on:
+      api:
+        condition: service_healthy
 
 volumes:
   db-data:
