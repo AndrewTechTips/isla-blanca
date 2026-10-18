@@ -47,8 +47,8 @@ export function About() {
         </div>
 
         <Reveal y={40} transition={spring(2, 0.2, 0.2)} className="mx-auto w-full max-w-[340px]">
-          {/* A rounded frame in the video's own 9:16 shape, with a thin gold outline set
-              slightly off it and drawn over the picture. */}
+          {/* A rounded frame in the video's own 9:16 shape, inside a thin gold outline with the
+              same gap all round, so the whole piece sits centered in its column. */}
           <motion.div className="relative" style={{ y: frameY }}>
             <div className="aspect-[340/604] overflow-hidden rounded-[200px]">
               <video
@@ -65,7 +65,7 @@ export function About() {
             </div>
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 translate-x-2 translate-y-[7px] rounded-[200px] border border-gold"
+              className="pointer-events-none absolute -inset-2.5 rounded-[210px] border border-gold"
             />
           </motion.div>
         </Reveal>

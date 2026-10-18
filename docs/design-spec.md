@@ -65,7 +65,7 @@ Each button label is rendered twice so the text can roll up on hover.
 
 ### About video
 - `340 × 604px` frame (the video's 9:16 shape) with `200px` corners, so it reads as a tall pill
-- A `1px` gold outline of the same shape sits `8px` right and `7px` lower, drawn over the video
+- A `1px` gold outline follows it `10px` away on every side, so the frame stays centered
 
 ### Booking bar (hero)
 - Dark forest panel `#1e2a24` with `12px` radius and `20px` inner padding; sits at the bottom of the hero
