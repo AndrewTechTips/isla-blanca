@@ -102,7 +102,7 @@ erDiagram
 Every table except the two link tables and `room_images` also has `created_at` and
 `updated_at` (`timestamptz`).
 
-## Relations required by the course
+## Relations
 
 | Type | Where | How it is enforced |
 |---|---|---|

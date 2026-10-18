@@ -1,4 +1,4 @@
-"""The 1-1, 1-n and n-m relations required by the course, checked against PostgreSQL."""
+"""The 1-1, 1-n and n-m relations of the data model, checked against PostgreSQL."""
 
 from datetime import date
 from decimal import Decimal
