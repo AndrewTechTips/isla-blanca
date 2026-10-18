@@ -5,6 +5,7 @@ import { Reveal } from '@/components/motion/Reveal'
 import { ButtonLink } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { useParallax } from '@/hooks/useParallax'
+import { asset } from '@/lib/assets'
 import { inViewOnce, spring, tween } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
@@ -37,7 +38,7 @@ export function About() {
             Isla Blanca is where quiet luxury meets the wild beauty of the island. Considered
             spaces, attentive service and an endless horizon make every stay one you carry home.
           </p>
-          <img src="/images/brand/signature.svg" alt="" className="h-14 opacity-80" />
+          <img src={asset('/images/brand/signature.svg')} alt="" className="h-14 opacity-80" />
           <p className="-mt-3 text-caption text-sage-deep uppercase">Guest Experience Manager</p>
           <Reveal transition={spring(1, 0.2, 0.5)}>
             <ButtonLink to="/services" variant="sage">
@@ -59,8 +60,8 @@ export function About() {
             <div className="relative aspect-[3/4] overflow-hidden rounded-t-full">
               <video
                 className="size-full object-cover"
-                src="/images/home/about-video.mp4"
-                poster="/images/home/about-video-poster.jpg"
+                src={asset('/images/home/about-video.mp4')}
+                poster={asset('/images/home/about-video-poster.jpg')}
                 autoPlay
                 muted
                 loop

@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { Spinner } from '@/components/ui/PageLoader'
 import { Eyebrow } from '@/components/ui/Eyebrow'
+import { asset } from '@/lib/assets'
 import { photo } from '@/lib/images'
 
 interface PanoramaTourProps {
@@ -37,7 +38,7 @@ export function PanoramaTour({ panorama, roomName }: PanoramaTourProps) {
         if (cancelled || !container.current) return
         const instance = new Viewer({
           container: container.current,
-          panorama,
+          panorama: asset(panorama),
           caption: `${roomName} · 360° view`,
           navbar: ['zoom', 'move', 'caption', 'fullscreen'],
           defaultZoomLvl: 10,

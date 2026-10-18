@@ -4,12 +4,14 @@
  * smallest one that looks sharp at the size the image is shown; `sizes` describes that size.
  * Any other address (an external image, a video poster) is passed through unchanged.
  */
+import { asset } from './assets'
+
 const OPTIMIZED = /^\/images\/(?!.*(?:-poster|panorama-360)\.jpg$).+\.jpg$/
 
 export function photo(src: string, sizes = '100vw') {
-  if (!OPTIMIZED.test(src)) return { src }
-  const base = src.slice(0, -'.jpg'.length)
-  return { src, srcSet: `${base}-800.webp 800w, ${base}-1600.webp 1600w`, sizes }
+  if (!OPTIMIZED.test(src)) return { src: asset(src) }
+  const base = asset(src.slice(0, -'.jpg'.length))
+  return { src: asset(src), srcSet: `${base}-800.webp 800w, ${base}-1600.webp 1600w`, sizes }
 }
 
 /** Common `sizes` for the card grids: one column on phones, two on tablets, three on desktops. */

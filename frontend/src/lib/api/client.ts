@@ -7,7 +7,7 @@ import { tokenStore } from './token'
  * API origin in production (e.g. https://isla-blanca-api.onrender.com). In development the
  * site's own origin, where Vite proxies /api to the backend.
  */
-const BASE_URL = import.meta.env.VITE_API_URL ?? window.location.origin
+const BASE_URL = import.meta.env.VITE_API_URL || window.location.origin
 
 interface ErrorBody {
   detail?: string | { msg: string; loc: (string | number)[] }[]

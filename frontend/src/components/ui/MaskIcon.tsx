@@ -1,3 +1,4 @@
+import { asset } from '@/lib/assets'
 import { cn } from '@/lib/cn'
 
 interface MaskIconProps {
@@ -11,7 +12,7 @@ interface MaskIconProps {
  * text color (gold by default), exactly like the original.
  */
 export function MaskIcon({ name, className }: MaskIconProps) {
-  const url = `url(/images/icons/${name}.svg)`
+  const url = `url(${asset(`/images/icons/${name}.svg`)})`
   return (
     <span
       aria-hidden="true"
