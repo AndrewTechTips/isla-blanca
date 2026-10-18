@@ -12,9 +12,8 @@ import { sketch } from '@/lib/sketch'
 /** Home "More than just a destination": text block and a video in an arched frame. */
 export function About() {
   const section = useRef<HTMLElement>(null)
-  // The arch rises a little faster than the text, and its gold outline lags behind it.
-  const archY = useParallax(section, 60, -60)
-  const outlineY = useParallax(section, -20, 20)
+  // The framed video rises a little faster than the text.
+  const frameY = useParallax(section, 60, -60)
 
   return (
     <section ref={section} className="relative isolate overflow-hidden section-y">
@@ -47,17 +46,11 @@ export function About() {
           </Reveal>
         </div>
 
-        <Reveal
-          y={40}
-          transition={spring(2, 0.2, 0.2)}
-          className="relative mx-auto w-full max-w-[420px]"
-        >
-          <motion.div style={{ y: archY }}>
-            <motion.div
-              className="absolute inset-0 translate-x-3 translate-y-3 rounded-t-full border border-gold/70"
-              style={{ y: outlineY }}
-            />
-            <div className="relative aspect-[3/4] overflow-hidden rounded-t-full">
+        <Reveal y={40} transition={spring(2, 0.2, 0.2)} className="mx-auto w-full max-w-[340px]">
+          {/* A rounded frame in the video's own 9:16 shape, with a thin gold outline set
+              slightly off it and drawn over the picture. */}
+          <motion.div className="relative" style={{ y: frameY }}>
+            <div className="aspect-[340/604] overflow-hidden rounded-[200px]">
               <video
                 className="size-full object-cover"
                 src={asset('/images/home/about-video.mp4')}
@@ -70,6 +63,10 @@ export function About() {
                 aria-label="A guest relaxing by the infinity pool"
               />
             </div>
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 translate-x-2 translate-y-[7px] rounded-[200px] border border-gold"
+            />
           </motion.div>
         </Reveal>
       </div>
