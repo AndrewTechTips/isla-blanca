@@ -16,7 +16,7 @@ const fadeIn = (delay: number) => ({
 function ExperienceCard({ icon, title, text }: (typeof experiences)[number]) {
   return (
     <article className="relative flex min-h-[380px] flex-col items-center justify-center gap-4 border border-gold/40 px-8 py-16 text-center lg:min-h-[440px]">
-      {/* Inner frame line, offset like the template's double border. */}
+      {/* Inner frame line, offset to read as a double border. */}
       <div aria-hidden="true" className="absolute inset-2 border border-gold/15" />
       <motion.div
         className="grid size-14 place-items-center rounded-full border border-gold/50 text-gold"

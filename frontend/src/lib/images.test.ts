@@ -16,9 +16,9 @@ describe('photo', () => {
     expect(photo('/images/home/about-video-poster.jpg')).toEqual({
       src: '/images/home/about-video-poster.jpg',
     })
-    expect(photo('/images/sereno/panorama-360.jpg')).toEqual({
-      src: '/images/sereno/panorama-360.jpg',
+    expect(photo('/images/tour/panorama-360.jpg')).toEqual({
+      src: '/images/tour/panorama-360.jpg',
     })
-    expect(photo('/images/sereno/panorama-360-small.jpg')).toHaveProperty('srcSet')
+    expect(photo('/images/tour/panorama-360-small.jpg')).toHaveProperty('srcSet')
   })
 })

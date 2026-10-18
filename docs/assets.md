@@ -1,32 +1,17 @@
-# Design assets
+# Images and media
 
-Original-resolution assets taken from two free Framer Marketplace templates, used as the visual
-base for this project. Downloaded 2026-10-17. They live in `frontend/public/images/` and are
-served from `/images/...`, the same paths the database seed uses.
+All images, icons and video live in `frontend/public/images/` and are served from
+`/images/...`, the same paths the database seed uses.
 
 Next to each photo, `npm run images` (in `frontend/`) writes WebP copies 800 and 1600 px wide
 (`hero-800.webp`, `hero-1600.webp`), which the site serves through `srcset`. The tables below
 list the originals only.
 
-| Source | Author | Live preview | License |
-|---|---|---|---|
-| [Aurelia Hotel](https://www.framer.com/marketplace/templates/aurelia-hotel/) | Slashdown | https://aurelia-template.framer.website/ | Framer Limited Commercial License (Free Content) |
-| [Sereno 360° Resort](https://www.framer.com/marketplace/templates/sereno-360-resort/) | on3step | https://sereno360.framer.website/ | Framer Limited Commercial License (Free Content) |
+## Brand
 
-The license ([Framer Community Terms §7.3.1](https://www.framer.com/legal/community-terms))
-allows using and modifying free content inside our own project. It does **not** allow
-redistributing these files as a standalone pack, or presenting the design as our original work.
-Keep the credit in the README and the site footer.
-
-## Our brand: Isla Blanca
-
-The resort in this project is called **Isla Blanca**, after Ibiza's nickname "la Isla Blanca"
-(the White Isle). The template's name "Aurelia" must not appear in the UI:
-`brand/logo-aurelia.svg` is the template's wordmark and is kept only as a reference.
-Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacing, gold
-`#b99a6b`).
-
-## Brand tokens (from Aurelia)
+The resort is called **Isla Blanca**, after Ibiza's nickname "la Isla Blanca" (the White Isle).
+The logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacing, gold
+`#b99a6b`) next to a small sun mark.
 
 **Fonts** (all on Google Fonts)
 - Headings: Cormorant Garamond
@@ -36,98 +21,75 @@ Our logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacin
 **Colors**
 | Token | Hex | Used for |
 |---|---|---|
-| gold | `#b99a6b` | accent, icons, links |
+| gold | `#b99a6b` | accent, icons, links on dark surfaces |
 | gold-light | `#dbae69` | hover accent |
+| gold-deep | `#7d6337` | gold text on light surfaces (WCAG AA) |
 | forest | `#1e2a24` | dark sections, footer |
 | forest-2 | `#223029` | dark section variant |
-| sage | `#6f7f73` | muted text on dark |
+| sage | `#6f7f73` | muted accents |
+| sage-deep | `#58675c` | sage text and buttons on light surfaces (WCAG AA) |
 | green | `#79a383` | success / available |
 | cream | `#f8f5f0` | page background |
 | sand | `#eee7dd` | cards, alternate sections |
 | ink | `#222222` | headings |
 | ink-soft | `#5a5a5a` | body text |
-| black | `#1c1d1c` | text on light |
-| white | `#ffffff` | |
 
-## Where each file is used in the original template
+## Where each file is used
 
 ### `brand/`
-| File | Original section |
+| File | Use |
 |---|---|
-| `logo-aurelia.svg` | Navbar logo (all pages) |
 | `signature.svg` | Home › About: "Guest Experience Manager" signature |
 | `noise-texture.png` | Grain overlay on top of hero photos (256×256 tile) |
 
 ### `home/`
-| File | Size | Original section |
+| File | Size | Use |
 |---|---|---|
-| `hero.jpg` | 2720×1760 | Home › Hero background ("Experience Timeless Luxury" + booking form) |
-| `about-bg.jpg` | 1672×854 | Home › About background; also Services › Intro and Contact › Info backgrounds |
-| `about-video.mp4` | vertical, 1.5 MB | Home › About: video in the arched frame |
+| `hero.jpg` | 2720×1760 | Home hero background |
+| `about-bg.jpg` | 1672×854 | Line-art background of Home › About, Services › Intro, Contact › Info and the 404 page |
+| `about-video.mp4` | 720×1280, 1.5 MB | Home › About: video in the rounded frame |
 | `about-video-poster.jpg` | 720×1280 | Poster frame for `about-video.mp4` |
-| `rooms-section-bg.jpg` | 1755×896 | Background of the "Featured Rooms" / "Other Rooms" sections; Gallery page background |
-| `gallery-section-bg.jpg` | 1536×1024 | Home › "A Glimpse of Aurelia" background |
-| `reviews-bg.jpg` | 2720×1760 | Reviews section background (Home, Rooms, Services, room pages) |
+| `rooms-section-bg.jpg` | 1755×896 | Line-art background of the rooms sections and the Rooms page |
+| `gallery-section-bg.jpg` | 1536×1024 | Line-art background of the gallery collage |
+| `reviews-bg.jpg` | 2720×1760 | Guest reviews section background |
 | `mobile-menu-bg.jpg` | 1755×896 | Mobile navigation overlay |
 
 ### `rooms/`
-| File | Original use |
+| File | Use |
 |---|---|
-| `tropical-garden-suite.jpg` | Room card + hero of `/rooms/tropical-garden-suite` (85 m², king bed, 6 guests, from $239) |
-| `infinity-pool-villa.jpg` | Room card + hero of `/rooms/infinity-pool-villa` (77 m², double bed, 4 guests, from $209) |
-| `sunset-premium-ocean-suite.jpg` | Room card + hero of `/rooms/sunset-premium-ocean-suite` (57 m², single bed, 2 guests, from $199) |
-| `coastal-breeze-suite.jpg` | Room card on `/rooms` |
-| `executive-ocean-residence.jpg` | Room card on `/rooms`; also in the gallery |
-| `private-garden-villa.jpg` | Room card on `/rooms` |
-| `detail-01.jpg`, `detail-02.jpg`, `detail-03.jpg` | Photo strip on every room detail page; also in the gallery |
+| `<room-slug>.jpg` | Cover photo of each room: room cards and the room page hero |
+| `detail-01.jpg`, `detail-02.jpg`, `detail-03.jpg` | Photo strip on room pages; also in the gallery |
 
 All room photos are 1536×1024.
 
 ### `gallery/`
-| File | Original use |
+| File | Use |
 |---|---|
-| `gallery-01.jpg` … `gallery-05.jpg` | Home › "A Glimpse of Aurelia" grid + Gallery page (`gallery-05` is also the Contact form background) |
-| `gallery-06.jpg` | Gallery page only |
-
-The Gallery page also reuses `services/hero.jpg`, `rooms/infinity-pool-villa.jpg`,
-`rooms/executive-ocean-residence.jpg` and the three `rooms/detail-*` photos.
+| `gallery-01.jpg` … `gallery-05.jpg` | Home gallery collage and Gallery page (`gallery-01` is behind the sign-in pages, `gallery-02` behind the Services hero, `gallery-05` behind the contact form) |
+| `gallery-06.jpg` | Gallery page and the spa experience |
 
 ### `services/`
-| File | Original use |
+| File | Use |
 |---|---|
-| `hero.jpg` | Services › Hero background ("Where Luxury Feels Natural"). Not used by us: the template's "AURELIA RESORT" sign is part of the photo |
-| `service-01.jpg`, `service-02.jpg` | Services › service cards |
+| `service-01.jpg`, `service-02.jpg` | Dining and private experiences on Home and Services |
 
 ### `icons/`
-Single-color line icons. The template paints them with CSS `mask` in the gold accent color,
-so they can be recolored freely.
+Single-color line icons, painted with CSS `mask` so they take the current text color.
 
-| File | Original use | Use in our app |
-|---|---|---|
-| `meta-size.svg` | Room card: surface (m²) | `Room.size_m2` |
-| `meta-bed.svg` | Room card: bed type | `Room.bed_type` |
-| `meta-guests.svg` | Room card: guests | `Room.max_guests` |
-| `service-spa.svg` | Home › Wellness & Spa | `Service` icon |
-| `service-dining.svg` | Home › Sunset Dining | `Service` icon |
-| `service-yacht.svg` | Home › Private Experiences | `Service` icon |
-| `amenity-air-conditioning.svg` | Room page amenities | `Amenity` icon |
-| `amenity-restaurant.svg` | Room page amenities | `Amenity` icon |
-| `amenity-minibar.svg` | Room page amenities | `Amenity` icon |
-| `amenity-wifi.svg` | Room page amenities | `Amenity` icon |
-| `amenity-towels.svg` | Room page amenities | `Amenity` icon |
-| `amenity-tv.svg` | Room page amenities | `Amenity` icon |
-| `amenity-keycard.svg` | Room page amenities | `Amenity` icon |
-| `amenity-safe.svg` | Room page amenities | `Amenity` icon |
+| File | Use |
+|---|---|
+| `meta-size.svg`, `meta-bed.svg`, `meta-guests.svg` | Room size, bed type and guests on cards and room pages |
+| `service-*.svg` | `Service` icons |
+| `amenity-*.svg` | `Amenity` icons on room pages |
 
-### `sereno/`
+### `tour/`
 | File | Size | Use |
 |---|---|---|
 | `panorama-360.jpg` | 4096×2048, 1.9 MB | Equirectangular panorama for the 360° room tour (Photo Sphere Viewer) |
-| `panorama-360-small.jpg` | 1774×887 | Low-res version to show while the full panorama loads |
+| `panorama-360-small.jpg` | 1774×887 | Preview shown until the visitor starts the tour |
 
-## Optimisation done
+## Optimisation
 
-- PNG photos converted to JPEG (quality 82): `rooms/detail-02`, `rooms/detail-03`,
-  `services/hero`, both panoramas.
-- The panorama was resized from 6000×3000 (5.8 MB PNG) to 4096×2048 (1.9 MB JPEG), the
-  largest texture size every GPU supports.
+- Photos are JPEG (quality 82) with WebP copies at 800 and 1600 px for `srcset`.
+- The panorama is 4096×2048, the largest texture size every GPU supports.
+- Media files carry no editing metadata.

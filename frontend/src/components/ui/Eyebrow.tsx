@@ -7,7 +7,7 @@ interface EyebrowProps {
   className?: string
   /** "lines" draws `— TEXT —`, "stars" draws `☆ TEXT ☆` (hero only). */
   decoration?: 'lines' | 'stars' | 'none'
-  /** The surface behind it: the template's gold reads well only on dark ones. */
+  /** The surface behind it: the brand gold reads well only on dark ones. */
   tone?: 'light' | 'dark'
 }
 

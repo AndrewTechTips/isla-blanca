@@ -79,10 +79,8 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="container-site flex flex-col gap-2 py-6 text-sm text-[#cccccc] md:flex-row md:justify-between">
-          <a href={site.credit.url} target="_blank" rel="noreferrer" className="hover:text-gold">
-            {site.credit.label}
-          </a>
           <p>© {YEAR} Isla Blanca. All rights reserved.</p>
+          <p>{site.location}</p>
         </div>
       </div>
     </footer>

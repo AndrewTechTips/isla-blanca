@@ -7,10 +7,6 @@ export const site = {
   email: 'hello@islablanca.es',
   website: 'www.islablanca.es',
   mapQuery: 'Sant Josep de sa Talaia, Ibiza',
-  credit: {
-    label: 'Design based on Aurelia by Slashdown',
-    url: 'https://www.framer.com/@slashdown/',
-  },
 }
 
 export const navigation = [

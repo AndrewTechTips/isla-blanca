@@ -8,7 +8,7 @@ import { hoverSpring } from '@/lib/motion'
 type Variant = 'sage' | 'gold' | 'ghost' | 'outline'
 
 const styles: Record<Variant, { base: string; hover: string }> = {
-  // A deeper sage than the template's so the label passes WCAG AA; hover darkens instead of lightening.
+  // A deeper sage than the brand's so the label passes WCAG AA; hover darkens instead of lightening.
   sage: { base: 'bg-sage-deep text-cream', hover: '#4a584e' },
   gold: { base: 'bg-gold text-forest', hover: '#dbae69' },
   ghost: { base: 'border border-white/70 text-white', hover: 'rgba(248, 245, 240, 0.3)' },
@@ -21,7 +21,7 @@ interface ButtonContentProps {
   variant: Variant
 }
 
-/** The label rolls up to an identical copy on hover, like the Framer button component. */
+/** The label rolls up to an identical copy on hover. */
 function RollingLabel({ children }: { children: ReactNode }) {
   return (
     <span className="relative block overflow-hidden">

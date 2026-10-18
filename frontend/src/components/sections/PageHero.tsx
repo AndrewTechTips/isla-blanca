@@ -20,7 +20,7 @@ interface PageHeroProps {
   className?: string
 }
 
-/** Full-height photo hero with the load-in sequence from the template. */
+/** Full-height photo hero with a staged load-in: photo, title, eyebrow, text, actions. */
 export function PageHero({
   image,
   eyebrow,

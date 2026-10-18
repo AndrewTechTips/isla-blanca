@@ -187,7 +187,7 @@ export function RoomEditor({ room, onDone }: RoomEditorProps) {
         <Field
           id={`${id}-panorama`}
           label="360° panorama URL"
-          hint="Optional, e.g. /images/sereno/panorama-360.jpg"
+          hint="Optional, e.g. /images/tour/panorama-360.jpg"
           className="sm:col-span-2"
         >
           <input

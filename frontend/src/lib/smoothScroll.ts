@@ -2,8 +2,8 @@ import Lenis from 'lenis'
 import 'lenis/dist/lenis.css'
 
 /**
- * One Lenis instance for the whole site: wheel and trackpad scrolling glide instead of jumping,
- * like the Framer template. Native scrolling is kept (Motion's scroll effects and the browser's
+ * One Lenis instance for the whole site: wheel and trackpad scrolling glide instead of jumping.
+ * Native scrolling is kept (Motion's scroll effects and the browser's
  * scroll restoration keep working), and nothing smooths when the visitor asked for reduced motion.
  */
 let lenis: Lenis | null = null

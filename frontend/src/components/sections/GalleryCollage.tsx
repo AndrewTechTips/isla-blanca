@@ -7,7 +7,7 @@ import { cn } from '@/lib/cn'
 import { photo } from '@/lib/images'
 import { sketch } from '@/lib/sketch'
 
-/** Where each photo starts before the section scrolls into place (from the template). */
+/** Where each photo starts before the section scrolls into place. */
 const scatter = [
   { rotate: -10, scale: 0.5, x: -30, y: -121 },
   { rotate: 10, scale: 0.5, x: 20, y: -122 },

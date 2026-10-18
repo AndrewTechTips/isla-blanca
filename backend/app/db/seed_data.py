@@ -48,7 +48,7 @@ ROOMS = [
         "size_m2": 120,
         "bed_type": BedType.KING,
         "max_guests": 4,
-        "panorama_url": "/images/sereno/panorama-360.jpg",
+        "panorama_url": "/images/tour/panorama-360.jpg",
         "images": ["infinity-pool-villa.jpg", "detail-03.jpg", "detail-01.jpg"],
         "amenities": ALL_AMENITIES,
     },

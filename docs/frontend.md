@@ -1,9 +1,8 @@
 # Frontend
 
 React 19 + TypeScript single-page app built with Vite, styled with Tailwind CSS 4 and animated
-with Motion. The public site reproduces the Aurelia template 1:1 (see
-[design-spec.md](design-spec.md)); behind it are the booking flow, the guest account and the
-staff dashboard, all backed by the API.
+with Motion. The public site follows the design in [design-spec.md](design-spec.md); behind it
+are the booking flow, the guest account and the staff dashboard, all backed by the API.
 
 ## Structure
 
@@ -30,7 +29,7 @@ frontend/
     ├── hooks/                page title, parallax, scroll lock, media queries
     ├── lib/
     │   ├── api/              typed client, generated schema, token store, React Query hooks
-    │   ├── motion.ts         spring and tween presets taken from the template
+    │   ├── motion.ts         spring and tween presets used across the site
     │   ├── smoothScroll.ts   Lenis smooth scrolling and the scroll lock for overlays
     │   ├── images.ts         srcset/sizes for the site's photos
     │   └── …                 dates, formatting, class merging, control styles
@@ -95,14 +94,14 @@ picks an arrival and then a departure date and goes on to `/book/:slug` with the
 
 ## Motion and scrolling
 
-- **Smooth scrolling** with Lenis (`lib/smoothScroll.ts`), like the template. It keeps native
+- **Smooth scrolling** with Lenis (`lib/smoothScroll.ts`). It keeps native
   scrolling underneath, so scroll restoration and Motion's scroll effects keep working. Dialogs
   and the mobile menu lock the page while open (`useScrollLock`).
 - **Page transitions**: each new page fades in. The page a visitor lands on appears at once, and
   moving between tabs of the account or staff area keeps their layout still.
 - **Parallax** (`useParallax`): the hero photo sinks as the page scrolls over it, the reviews
-  photo drifts behind its section, and the About arch and its gold outline move at different
-  speeds.
+  photo drifts behind its section, and the framed video in About rises a little faster than
+  the text beside it.
 - With the operating system's "reduce motion" setting on, there is no smooth scrolling, no
   parallax and Motion skips its animations.
 
@@ -110,7 +109,7 @@ picks an arrival and then a departure date and goes on to `/book/:slug` with the
 
 - A "Skip to content" link, a visible focus ring, labelled icon buttons and landmarks.
 - Dialogs and the mobile menu trap focus, close with Escape and return focus to what opened them.
-- **Contrast**: the template's gold (2.5:1 on cream) and sage (3.9:1) are too light for text on
+- **Contrast**: the brand gold (2.5:1 on cream) and sage (3.9:1) are too light for text on
   light backgrounds, so text there uses `gold-deep` and `sage-deep` (5.2:1 and 5.5:1, same hues).
   The original gold stays on the dark green sections, where it passes. `Eyebrow` and
   `ArrowLink` take a `tone` for the surface they sit on.
@@ -118,14 +117,14 @@ picks an arrival and then a departure date and goes on to `/book/:slug` with the
 
 ## Design system
 
-- **Tokens** live in `styles/index.css` under `@theme`: the template's palette (`gold`, `forest`,
-  `sage`, `cream`, `sand`, …), three fonts and Framer's breakpoints (`md` = 810px,
+- **Tokens** live in `styles/index.css` under `@theme`: the palette (`gold`, `forest`,
+  `sage`, `cream`, `sand`, …), three fonts and the breakpoints (`md` = 810px,
   `lg` = 1200px).
 - **Type roles** are utilities (`text-display`, `text-heading`, `text-subheading`,
   `text-card-title`, `text-quote`, `text-eyebrow`, `text-button`, `text-label`) that change size
-  per breakpoint exactly like the template. `cn()` (tailwind-merge) knows them, so later classes
+  per breakpoint as the design spec sets out. `cn()` (tailwind-merge) knows them, so later classes
   override earlier ones predictably.
-- **Animations** use the template's own values from `lib/motion.ts`. Everything honours the
+- **Animations** use the values from `lib/motion.ts`. Everything honours the
   visitor's "reduce motion" setting.
 - **Revenue chart** (admin): one series, sage columns (gold fails 3:1 contrast on white), a value
   label only on the latest month, tooltips on hover and focus, and a hidden data table for screen
@@ -155,7 +154,7 @@ Lighthouse (production build, `npm run build && npm run preview`):
 | Contact | 91 / 100 / 100 / 100 | 74 |
 | Sign in | 99 / 100 / 100 / 100 | 93 |
 
-On a throttled phone the largest element is usually the hero title, and the template brings it
+On a throttled phone the largest element is usually the hero title, and the design brings it
 in with a 0.5 s delay and a 2 s fade, which Lighthouse counts in Largest Contentful Paint.
 Accessibility, best practices and SEO are 100 on mobile too.
 

@@ -1,8 +1,8 @@
 @import 'tailwindcss';
 
 /*
- * Design tokens, measured from the Aurelia template (docs/design-spec.md).
- * Breakpoints match Framer's layouts: phone < 810px, tablet 810–1199px, desktop ≥ 1200px.
+ * Design tokens (docs/design-spec.md).
+ * Three layouts: phone < 810px, tablet 810–1199px, desktop ≥ 1200px.
  */
 @theme {
   --breakpoint-md: 50.625rem; /* 810px */
@@ -10,7 +10,7 @@
 
   --color-gold: #b99a6b;
   --color-gold-light: #dbae69;
-  /* Text on cream, sand and white: the template's gold and sage are too light to read there
+  /* Text on cream, sand and white: the brand gold and sage are too light to read there
      (2.5:1 and 3.9:1); these keep the hue and reach WCAG AA (4.5:1). */
   --color-gold-deep: #7d6337;
   --color-sage-deep: #58675c;
@@ -30,7 +30,7 @@
 
   --container-site: 73.75rem; /* 1180px */
 
-  --ease-framer: cubic-bezier(0.44, 0, 0.56, 1);
+  --ease-soft: cubic-bezier(0.44, 0, 0.56, 1);
 }
 
 @layer base {
@@ -182,7 +182,7 @@
 
 /*
  * Faint line-art illustration behind cream sections. Set the image with
- * style={{ '--sketch': 'url(...)' }}; a cream veil keeps it as soft as in the template.
+ * style={{ '--sketch': 'url(...)' }}; a cream veil keeps it soft.
  */
 @utility sketch-bg {
   --sketch-veil: linear-gradient(rgb(248 245 240 / 0.55), rgb(248 245 240 / 0.55));

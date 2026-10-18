@@ -1,15 +1,11 @@
 # Design spec
 
-Measured from the live Aurelia template (https://aurelia-template.framer.website/) on
-2026-10-17, so the frontend can reproduce it 1:1 before we improve on it. Colors, fonts and
-the asset map are in [`assets/ASSETS.md`](../assets/ASSETS.md).
-
-Animation timings come from our Remix of the template in the Framer editor and the matching
-values in the published page.
+The visual design of Isla Blanca: layout, type, components and the exact animation values the
+frontend implements. Colors, fonts and where each image is used are in [assets.md](assets.md).
 
 ## Breakpoints
 
-Framer uses three layouts. Tailwind config should match them exactly.
+The site has three layouts, set as Tailwind breakpoints.
 
 | Name | Width | Notes |
 |---|---|---|
@@ -53,19 +49,23 @@ Body text uses **Manrope**. Small labels use **Inter** or Manrope in uppercase w
 | Caption (signature role, review source) | Inter | 10px | 10px | 10px | 800–900 | 1.6 | 0.19em |
 
 Eyebrows are gold (`#b99a6b`) with a short horizontal line on each side, e.g.
-`— AURELIA RESORT, IBIZA —`.
+`— ISLA BLANCA, IBIZA —`.
 
 ## Components
 
 ### Buttons
 | Variant | Background | Text | Padding | Radius | Height | Used for |
 |---|---|---|---|---|---|---|
-| Primary sage | `#6f7f73` | cream | 12px 16px | 5px | 45px | About Us, Explore Room |
+| Primary sage | `#58675c` (sage-deep, for AA contrast) | cream | 12px 16px | 5px | 45px | About Us, Explore Room |
 | Primary gold | `#b99a6b` | forest | 12px 16px | 5px | 45px | More Services, Get in Touch, Request Booking |
 | Ghost | transparent gold | white | 12px 16px | 5px | 45px | Discover Rooms (on the hero) |
 | Text link with arrow | none | gold `#b99a6b` | 0 | — | 24px | Book Now, All Rooms |
 
 Each button label is rendered twice so the text can roll up on hover.
+
+### About video
+- `340 × 604px` frame (the video's 9:16 shape) with `200px` corners, so it reads as a tall pill
+- A `1px` gold outline of the same shape sits `8px` right and `7px` lower, drawn over the video
 
 ### Booking bar (hero)
 - Dark forest panel `#1e2a24` with `12px` radius and `20px` inner padding; sits at the bottom of the hero
@@ -96,7 +96,7 @@ Each button label is rendered twice so the text can roll up on hover.
 
 ### Footer
 - Forest background, four columns: brand (logo, address, tagline), Contact, Social, Pages
-- Bottom row: credit on the left, copyright on the right
+- Bottom row: copyright on the left, location on the right
 
 ### Decorative backgrounds
 The cream sections use faint line-art illustrations (palms, mountains, a Buddha statue) as
@@ -107,7 +107,7 @@ full-section backgrounds: `home/about-bg.jpg`, `home/rooms-section-bg.jpg`,
 
 | Page | Sections in order |
 |---|---|
-| Home | Hero (100vh + booking bar) → About (text + arched video) → CTA band → Featured Rooms (3 cards) → Services (dark) → Gallery → Reviews → FAQ → Footer |
+| Home | Hero (100vh + booking bar) → About (text + framed video) → CTA band → Featured Rooms (3 cards) → Services (dark) → Gallery → Reviews → FAQ → Footer |
 | Rooms | Rooms grid (all 6) → Reviews → FAQ → Footer |
 | Room detail | Hero (room photo + booking bar) → Room (price, meta, description, photo strip, amenities with icons) → CTA band → Other Rooms → Reviews → FAQ → Footer |
 | Services | Hero → Intro → Services list → Reviews → FAQ → Footer |
@@ -118,7 +118,7 @@ full-section backgrounds: `home/about-bg.jpg`, `home/rooms-section-bg.jpg`,
 
 Every reveal runs once, when the element enters the viewport. "Spring 2s / 0.2" means a
 time-based spring, which maps 1:1 to Motion: `{ type: "spring", duration: 2, bounce: 0.2 }`.
-Framer's default ease `[0.44, 0, 0.56, 1]` is written as `ease`.
+The standard ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 
 ### On page load (hero)
 | Element | From | Transition |
@@ -132,7 +132,7 @@ Framer's default ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 ### On scroll into view
 | Element | From | Transition |
 |---|---|---|
-| About background / arch frame | `opacity 0` | tween 1.3s, `ease` |
+| About background / video frame | `opacity 0` | tween 1.3s, `ease` |
 | Buttons (About Us, All Rooms, Book Now, Get in Touch) | `opacity 0` | spring 1s / bounce 0.2, delay 0.5–1.3s |
 | CTA band sentence | each **word** `opacity 0, y 10, blur(10px)` | spring 1.5s / bounce 0, delay 0.05s per word |
 | Room cards | `opacity 0, y −40` (drop from above) | spring 2s / bounce 0.2, delay `index × 0.4s` |
@@ -151,7 +151,7 @@ Framer's default ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 ### Interactions
 | Element | Effect | Transition |
 |---|---|---|
-| Sage button hover | background `#6f7f73` → `#79a383` | spring 0.4s / bounce 0.2 |
+| Sage button hover | background `#58675c` → `#4a584e` | spring 0.4s / bounce 0.2 |
 | Gold button hover | background `#b99a6b` → `#dbae69` | spring 0.4s / bounce 0.2 |
 | Ghost button hover | background → `rgba(248,245,240,.3)` | spring 0.4s / bounce 0.2 |
 | Button label | Label rolls up to a duplicate on hover | spring 0.4s / bounce 0.2 |
@@ -163,9 +163,8 @@ Framer's default ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 
 ## Implementation notes
 
-- Framer renders with Motion, the same library we use in React, so each row above maps to an
-  `initial` / `whileInView` pair (`viewport={{ once: true }}`), and the gallery to
-  `useScroll` + `useTransform`.
+- Each row above maps to a Motion `initial` / `whileInView` pair
+  (`viewport={{ once: true }}`), and the gallery to `useScroll` + `useTransform`.
 - Load fonts from Google Fonts: Cormorant Garamond (500, 600, 700, 900, plus italic 700),
   Manrope (500, 600, 700, 800), Inter (800, 900).
 - Each button label is duplicated for the hover roll; build it once as a `<Button>` component.

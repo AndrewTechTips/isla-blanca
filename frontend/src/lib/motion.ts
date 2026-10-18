@@ -1,10 +1,10 @@
 /**
- * Animation presets copied from the Framer template (docs/design-spec.md → Animations).
- * Framer's time-based springs map 1:1 to Motion's `{ type: 'spring', duration, bounce }`.
+ * The site's animation presets (docs/design-spec.md → Animations). Springs are time-based:
+ * Motion's `{ type: 'spring', duration, bounce }`.
  */
 import type { Transition } from 'motion/react'
 
-export const framerEase = [0.44, 0, 0.56, 1] as const
+export const softEase = [0.44, 0, 0.56, 1] as const
 
 export const spring = (duration: number, bounce: number, delay = 0): Transition => ({
   type: 'spring',
@@ -17,7 +17,7 @@ export const tween = (duration: number, delay = 0): Transition => ({
   type: 'tween',
   duration,
   delay,
-  ease: framerEase,
+  ease: softEase,
 })
 
 /** Hover and small UI changes (buttons, links, accordion). */

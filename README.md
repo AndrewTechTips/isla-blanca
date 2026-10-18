@@ -33,7 +33,7 @@ isla-blanca/
 ├── docker/                  container setup (PostgreSQL init scripts)
 ├── docs/                    API, database, frontend, design spec, assets
 ├── frontend/                React + TypeScript single-page app
-│   ├── public/images/       photos, icons and video from the template
+│   ├── public/images/       photos, icons, video and the 360° panorama
 │   └── src/                 pages, sections, UI components, API client, theme
 ├── docker-compose.yml       database for development, or the whole app in containers
 ├── render.yaml              Render Blueprint for the API
@@ -92,12 +92,4 @@ Deployment to Neon, Render and GitHub Pages is described in [docs/deployment.md]
 - [API: architecture, endpoints, booking rules, errors](docs/api.md)
 - [Database: diagram, relations and constraints](docs/database.md)
 - [Design spec: layout, typography, animations](docs/design-spec.md)
-- [Design assets: sources, license, where each file is used](docs/assets.md)
-
-## Credits
-
-Visual design based on the free Framer templates
-[Aurelia Hotel](https://www.framer.com/marketplace/templates/aurelia-hotel/) by Slashdown and
-[Sereno 360° Resort](https://www.framer.com/marketplace/templates/sereno-360-resort/) by on3step,
-used under the Framer Community free content license. Photography and icons belong to their
-original authors. The application code, database and features are our own work.
+- [Images and media: where each file is used](docs/assets.md)

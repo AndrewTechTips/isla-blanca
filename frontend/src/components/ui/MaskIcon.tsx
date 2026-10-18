@@ -8,8 +8,8 @@ interface MaskIconProps {
 }
 
 /**
- * Single-color line icon from the template, painted with CSS mask so it takes the current
- * text color (gold by default), exactly like the original.
+ * Single-color line icon, painted with CSS mask so it takes the current text color
+ * (gold by default).
  */
 export function MaskIcon({ name, className }: MaskIconProps) {
   const url = `url(${asset(`/images/icons/${name}.svg`)})`

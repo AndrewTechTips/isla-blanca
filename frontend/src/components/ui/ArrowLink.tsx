@@ -12,7 +12,7 @@ interface ArrowLinkProps {
   to: string
   children: ReactNode
   className?: string
-  /** The surface behind it: the template's gold reads well only on dark ones. */
+  /** The surface behind it: the brand gold reads well only on dark ones. */
   tone?: 'light' | 'dark'
 }
 
