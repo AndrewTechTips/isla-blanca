@@ -1,0 +1,28 @@
+# Render Blueprint: the API as a Docker web service (Dashboard → New → Blueprint → this repo).
+# The database is external (Neon); paste its connection string when Render asks for DATABASE_URL.
+services:
+  - type: web
+    name: isla-blanca-api
+    runtime: docker
+    plan: free
+    region: frankfurt
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: '["https://andrewtechtips.github.io"]'
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "120"
+      # Loads the demo rooms, services and accounts into an empty database.
+      - key: SEED_DEMO_DATA
+        value: "true"
+      - key: SEED_ADMIN_PASSWORD
+        sync: false
+      - key: SEED_GUEST_PASSWORD
+        sync: false
