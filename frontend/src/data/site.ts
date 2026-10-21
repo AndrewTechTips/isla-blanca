@@ -14,6 +14,7 @@ export const navigation = [
   { label: 'Rooms', to: '/rooms' },
   { label: 'Services', to: '/services' },
   { label: 'Gallery', to: '/gallery' },
+  { label: 'Club', to: '/club' },
   { label: 'Contact', to: '/contact' },
 ]
 

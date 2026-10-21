@@ -14,16 +14,17 @@ frontend/
     ├── app/                  router (lazy routes and guards), React Query client
     ├── components/
     │   ├── brand/            logo, social icons
+    │   ├── club/             the Isla Blanca Club member card
     │   ├── layout/           root layout, navbar with account link, mobile menu, footer
     │   ├── motion/           Reveal and WordReveal animation wrappers
     │   ├── rooms/            room card and its loading skeleton
     │   ├── sections/         marketing sections reused across pages (hero, booking bar, FAQ…)
     │   └── ui/               buttons, form fields, dialog, status badge, pagination, loaders
-    ├── data/                 static copy: navigation, contact details, FAQ, testimonials
+    ├── data/                 static copy: navigation, contact details, FAQ, testimonials, club
     ├── features/
     │   ├── auth/             auth context, login, register, route guards, safe redirects
     │   ├── booking/          booking page with live price quote and availability
-    │   ├── account/          my bookings, booking detail (cancel, review), profile
+    │   ├── account/          my bookings, booking detail (cancel, review), club card, profile
     │   ├── admin/            dashboard, bookings, rooms, services, amenities, guests
     │   └── rooms/            availability calendar, 360° tour, room reviews
     ├── hooks/                page title, parallax, scroll lock, media queries
@@ -33,7 +34,7 @@ frontend/
     │   ├── smoothScroll.ts   Lenis smooth scrolling and the scroll lock for overlays
     │   ├── images.ts         srcset/sizes for the site's photos
     │   └── …                 dates, formatting, class merging, control styles
-    ├── pages/                marketing pages (home, rooms, room, services, gallery, contact)
+    ├── pages/                marketing pages (home, rooms, room, services, gallery, club, contact)
     ├── styles/index.css      Tailwind theme: colors, fonts, breakpoints, type scale
     └── test/                 Vitest setup
 ```
@@ -57,10 +58,10 @@ does once they interact with their data.
 
 | Route | Access | Content |
 |---|---|---|
-| `/`, `/rooms`, `/rooms/:slug`, `/services`, `/gallery`, `/contact` | everyone | Marketing site |
+| `/`, `/rooms`, `/rooms/:slug`, `/services`, `/gallery`, `/club`, `/contact` | everyone | Marketing site |
 | `/book/:slug` | everyone (booking needs sign-in) | Dates, guests, extras, live price, availability |
 | `/login`, `/register` | signed-out only | Sign in, create an account |
-| `/account`, `/account/bookings/:ref`, `/account/profile` | signed in | Bookings, cancel, review, profile |
+| `/account`, `/account/bookings/:ref`, `/account/club`, `/account/profile` | signed in | Bookings, cancel, review, club card, profile |
 | `/admin/*` | admins only | Dashboard, bookings, rooms, services, amenities, guests |
 
 - The JWT is kept in `localStorage`; `AuthProvider` loads the current user from `/auth/me`.
@@ -78,6 +79,23 @@ does once they interact with their data.
 4. Confirming creates the booking and opens its page with a confirmation message.
 5. From the account the guest can cancel before arrival (with a confirmation dialog) and review
    the stay once it has ended.
+
+## Isla Blanca Club
+
+The club gives every account a tier (Silver, Gold, Platinum) with a discount on room nights;
+the rules live in the API (see [api.md](api.md#isla-blanca-club)).
+
+- `/club` presents the tiers. Its numbers come from `/membership/tiers`; the same values ship
+  in `data/club.ts` and show until the API answers, so the page never waits on a sleeping server.
+- `MemberCard` draws the card in CSS (brushed-metal gradients, an engraved frame, a chip), so it
+  carries the guest's own name and number. It tilts towards the pointer with a moving
+  reflection, and stays still for visitors who prefer reduced motion. Its text is sized in
+  container units, so the card looks the same at any width.
+- `/account/club` shows the guest's card and their progress to the next tier.
+- Signed-in guests see their member rate as its own line in the booking summary and on the
+  booking's page. The quote's cache key includes the tier, so signing in reprices the stay.
+- Staff change a guest's tier from the Guests page; completing a stay refreshes the guest's card.
+- Prices show cents only when there are any (`formatPrice`), so a discounted bill adds up exactly.
 
 ## Availability calendar
 
@@ -164,7 +182,7 @@ Accessibility, best practices and SEO are 100 on mobile too.
 cd frontend
 npm install
 npm run dev          # http://localhost:5173, /api is proxied to the API on :8000
-npm test             # Vitest: dates, calendar, images, API client, class merging, redirects, guards
+npm test             # Vitest: dates, calendar, images, prices, API client, redirects, guards, card
 npm run build        # type-check and production build into dist/
 npm run lint         # oxlint
 npm run format       # prettier (with Tailwind class sorting)

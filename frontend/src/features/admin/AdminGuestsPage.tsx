@@ -3,10 +3,40 @@ import { useState } from 'react'
 import { Alert } from '@/components/ui/form'
 import { PageLoader } from '@/components/ui/PageLoader'
 import { Pagination } from '@/components/ui/Pagination'
+import { tierCopy } from '@/data/club'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import { useAdminUsers } from '@/lib/api/queries/admin'
+import { useAdminUsers, useSetMembership } from '@/lib/api/queries/admin'
+import type { MembershipTier, User } from '@/lib/api/types'
+import { cn } from '@/lib/cn'
+import { controlClass } from '@/lib/controlClass'
 
 import { AdminHeader } from './AdminLayout'
+
+const TIERS = Object.keys(tierCopy) as MembershipTier[]
+
+/** Staff can move a guest to any tier; completed stays only ever move guests up. */
+function TierSelect({ user }: { user: User }) {
+  const setMembership = useSetMembership()
+  const pending = setMembership.isPending && setMembership.variables?.userId === user.id
+
+  return (
+    <select
+      aria-label={`Club tier for ${user.profile.full_name}`}
+      value={pending ? setMembership.variables.tier : user.profile.membership_tier}
+      disabled={pending}
+      onChange={(event) =>
+        setMembership.mutate({ userId: user.id, tier: event.target.value as MembershipTier })
+      }
+      className={cn(controlClass('light'), 'w-auto cursor-pointer py-1.5')}
+    >
+      {TIERS.map((tier) => (
+        <option key={tier} value={tier}>
+          {tierCopy[tier].name}
+        </option>
+      ))}
+    </select>
+  )
+}
 
 export function AdminGuestsPage() {
   usePageTitle('Guests')
@@ -15,7 +45,10 @@ export function AdminGuestsPage() {
 
   return (
     <>
-      <AdminHeader title="Guests" text="Everyone with an account, staff included." />
+      <AdminHeader
+        title="Guests"
+        text="Everyone with an account, staff included. Club tiers rise on their own with completed stays; change one here when needed."
+      />
       {users.isPending ? (
         <PageLoader className="min-h-[30svh]" />
       ) : users.isError ? (
@@ -46,7 +79,9 @@ export function AdminGuestsPage() {
                     </td>
                     <td className="px-4 py-3">{user.email}</td>
                     <td className="px-4 py-3">{user.profile.country ?? '—'}</td>
-                    <td className="px-4 py-3 capitalize">{user.profile.membership_tier}</td>
+                    <td className="px-4 py-2">
+                      <TierSelect user={user} />
+                    </td>
                     <td className="px-4 py-3">
                       {new Date(user.created_at).toLocaleDateString('en-GB', {
                         day: 'numeric',

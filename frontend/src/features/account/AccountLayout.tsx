@@ -7,7 +7,12 @@ import { cn } from '@/lib/cn'
 
 const tabs = [
   // "My bookings" stays selected on a booking's own page too.
-  { to: '/account', label: 'My bookings', match: (path: string) => path !== '/account/profile' },
+  {
+    to: '/account',
+    label: 'My bookings',
+    match: (path: string) => path !== '/account/profile' && path !== '/account/club',
+  },
+  { to: '/account/club', label: 'Club card', match: (path: string) => path === '/account/club' },
   {
     to: '/account/profile',
     label: 'Profile',

@@ -112,6 +112,7 @@ full-section backgrounds: `home/about-bg.jpg`, `home/rooms-section-bg.jpg`,
 | Room detail | Hero (room photo + booking bar) → Room (price, meta, description, photo strip, amenities with icons) → CTA band → Other Rooms → Reviews → FAQ → Footer |
 | Services | Hero → Intro → Services list → Reviews → FAQ → Footer |
 | Gallery | Gallery collage → Footer |
+| Club | Dark hero (text + fanned member cards) → Tiers (card, discount, perks) → How it works → Benefits (dark) → FAQ → CTA band → Footer |
 | Contact | Form → Contact info → CTA band → FAQ → Footer |
 
 ## Animations

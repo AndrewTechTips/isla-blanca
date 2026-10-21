@@ -51,6 +51,10 @@ export function useUpdateProfile() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (body: ProfileUpdate) => unwrap(client.PATCH('/api/v1/auth/me', { body })),
-    onSuccess: (user) => queryClient.setQueryData(keys.me, user),
+    onSuccess: (user) => {
+      queryClient.setQueryData(keys.me, user)
+      // The club card prints the guest's name.
+      return queryClient.invalidateQueries({ queryKey: keys.membership.mine })
+    },
   })
 }

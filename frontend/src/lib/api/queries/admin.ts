@@ -6,6 +6,7 @@ import type {
   AmenityCreate,
   AmenityUpdate,
   BookingStatus,
+  MembershipTier,
   RoomCreate,
   RoomUpdate,
   ServiceCreate,
@@ -56,9 +57,16 @@ function useInvalidateAll() {
   const queryClient = useQueryClient()
   return () =>
     Promise.all(
-      [keys.admin.all, keys.rooms.all, keys.services, keys.amenities, keys.bookings.all].map(
-        (queryKey) => queryClient.invalidateQueries({ queryKey }),
-      ),
+      [
+        keys.admin.all,
+        keys.rooms.all,
+        keys.services,
+        keys.amenities,
+        keys.bookings.all,
+        // Completing a stay or setting a tier can change a guest's club card, staff's own too.
+        keys.membership.all,
+        keys.me,
+      ].map((queryKey) => queryClient.invalidateQueries({ queryKey })),
     )
 }
 
@@ -70,6 +78,20 @@ export function useUpdateBookingStatus() {
         client.PATCH('/api/v1/admin/bookings/{reference}', {
           params: { path: { reference } },
           body: { status },
+        }),
+      ),
+    onSuccess,
+  })
+}
+
+export function useSetMembership() {
+  const onSuccess = useInvalidateAll()
+  return useMutation({
+    mutationFn: ({ userId, tier }: { userId: number; tier: MembershipTier }) =>
+      unwrap(
+        client.PUT('/api/v1/admin/users/{user_id}/membership', {
+          params: { path: { user_id: userId } },
+          body: { tier },
         }),
       ),
     onSuccess,

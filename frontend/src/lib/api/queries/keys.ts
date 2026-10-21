@@ -11,7 +11,13 @@ export const keys = {
   },
   services: ['services'] as const,
   amenities: ['amenities'] as const,
-  quote: (request: object) => ['quote', request] as const,
+  // The price depends on who asks: signed-in guests get their club discount.
+  quote: (request: object, tier?: string) => ['quote', request, tier ?? 'guest'] as const,
+  membership: {
+    all: ['membership'] as const,
+    tiers: ['membership', 'tiers'] as const,
+    mine: ['membership', 'mine'] as const,
+  },
   bookings: {
     all: ['bookings'] as const,
     mine: (page: number) => ['bookings', 'mine', page] as const,

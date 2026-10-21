@@ -8,6 +8,7 @@ import { Alert, Field } from '@/components/ui/form'
 import { controlClass } from '@/lib/controlClass'
 import { PageLoader } from '@/components/ui/PageLoader'
 import { StatusBadge } from '@/components/ui/StatusBadge'
+import { tierCopy } from '@/data/club'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { ApiError } from '@/lib/api/client'
 import { useBooking, useCancelBooking, useReviewBooking } from '@/lib/api/queries/bookings'
@@ -239,11 +240,18 @@ export function BookingDetailPage() {
               </dt>
               <dd className="text-cream">
                 {formatPrice(
-                  Number(b.total_price) -
+                  Number(b.total_price) +
+                    Number(b.member_discount) -
                     b.services.reduce((sum, line) => sum + Number(line.subtotal), 0),
                 )}
               </dd>
             </div>
+            {b.member_tier && Number(b.member_discount) > 0 && (
+              <div className="flex justify-between gap-4 text-gold-light">
+                <dt>{tierCopy[b.member_tier].name} member rate</dt>
+                <dd>−{formatPrice(b.member_discount)}</dd>
+              </div>
+            )}
             {b.services.map((line) => (
               <div key={line.service.id} className="flex justify-between gap-4">
                 <dt>

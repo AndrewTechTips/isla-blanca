@@ -54,6 +54,13 @@ export const router = createBrowserRouter(
           ),
         },
         {
+          path: 'club',
+          lazy: page(
+            () => import('@/pages/ClubPage'),
+            (m) => m.ClubPage,
+          ),
+        },
+        {
           path: 'contact',
           lazy: page(
             () => import('@/pages/ContactPage'),
@@ -114,6 +121,13 @@ export const router = createBrowserRouter(
                   lazy: page(
                     () => import('@/features/account/BookingDetailPage'),
                     (m) => m.BookingDetailPage,
+                  ),
+                },
+                {
+                  path: 'club',
+                  lazy: page(
+                    () => import('@/features/account/ClubCardPage'),
+                    (m) => m.ClubCardPage,
                   ),
                 },
                 {

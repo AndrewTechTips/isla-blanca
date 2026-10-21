@@ -62,22 +62,30 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
   )
 }
 
-export function Faq() {
+interface FaqProps {
+  items?: { question: string; answer: string }[]
+  title?: string
+  text?: string
+}
+
+export function Faq({
+  items = faqs,
+  title = 'Before Your Stay',
+  text = 'Answers to the questions guests ask most about arrival, amenities and resort services.',
+}: FaqProps) {
   return (
     <section className="bg-sand section-y">
       <div className="container-site grid gap-12 lg:grid-cols-2">
         <div className="max-w-[440px] space-y-5">
           <Eyebrow>FAQ</Eyebrow>
-          <h2 className="text-heading font-bold text-ink">Before Your Stay</h2>
-          <p>
-            Answers to the questions guests ask most about arrival, amenities and resort services.
-          </p>
+          <h2 className="text-heading font-bold text-ink">{title}</h2>
+          <p>{text}</p>
           <ButtonLink to="/contact" variant="gold">
             Get in Touch
           </ButtonLink>
         </div>
         <div className="border-t border-ink/15">
-          {faqs.map((faq) => (
+          {items.map((faq) => (
             <FaqItem key={faq.question} {...faq} />
           ))}
         </div>

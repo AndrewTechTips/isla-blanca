@@ -8,6 +8,7 @@ import { Alert, Field } from '@/components/ui/form'
 import { controlClass } from '@/lib/controlClass'
 import { MaskIcon } from '@/components/ui/MaskIcon'
 import { PageLoader, Spinner } from '@/components/ui/PageLoader'
+import { tierCopy } from '@/data/club'
 import { useAuth } from '@/features/auth/useAuth'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { useCreateBooking, useQuote } from '@/lib/api/queries/bookings'
@@ -124,7 +125,7 @@ function BookingForm({ room }: { room: RoomDetail }) {
   const id = useId()
   const navigate = useNavigate()
   const location = useLocation()
-  const { status } = useAuth()
+  const { status, user } = useAuth()
   const initial = useStayFromUrl()
   const services = useServices()
   const createBooking = useCreateBooking()
@@ -162,7 +163,7 @@ function BookingForm({ room }: { room: RoomDetail }) {
           },
     [dateError, room.id, checkIn, checkOut, adults, children, selected],
   )
-  const quote = useQuote(request)
+  const quote = useQuote(request, user?.profile.membership_tier)
   const availability = useRoomAvailability(room.slug, checkIn, dateError ? undefined : checkOut)
   const isBooked =
     !dateError &&
@@ -324,6 +325,12 @@ function BookingForm({ room }: { room: RoomDetail }) {
                 </dt>
                 <dd className="text-cream">{formatPrice(quote.data.room_total)}</dd>
               </div>
+              {quote.data.member_tier && Number(quote.data.member_discount) > 0 && (
+                <div className="flex justify-between gap-4 text-gold-light">
+                  <dt>{tierCopy[quote.data.member_tier].name} member rate</dt>
+                  <dd>−{formatPrice(quote.data.member_discount)}</dd>
+                </div>
+              )}
               {quote.data.services.map((line) => (
                 <div key={line.service.id} className="flex justify-between gap-4">
                   <dt>
@@ -365,6 +372,14 @@ function BookingForm({ room }: { room: RoomDetail }) {
         <p className="text-center text-xs text-sand/70">
           Free cancellation until the day before arrival.
         </p>
+        {status === 'signed-out' && (
+          <p className="text-center text-xs text-sand/70">
+            Club members save from 5% on every room night.{' '}
+            <Link to="/club" className="text-gold-light underline underline-offset-2">
+              Join for free
+            </Link>
+          </p>
+        )}
       </aside>
     </form>
   )

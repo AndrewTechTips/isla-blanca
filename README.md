@@ -50,6 +50,9 @@ and book it. Staff run the resort from a dashboard: bookings, rooms, prices, ser
 - **Know the price as you build the stay.** Add a spa day, sunset dinner or a yacht trip and the
   total updates live, priced by the API, never guessed by the browser.
 - **Look around first.** The villa has a 360° tour you can drag, zoom and open full screen.
+- **Get rewarded for coming back.** Every account joins the Isla Blanca Club. Members save 5 to
+  15% on room nights and move from Silver to Gold and Platinum as their stays add up, with a
+  metal-look member card that carries their own name and number.
 - **Keep it all in one place.** My bookings, cancellations up to the day before arrival, and a
   review once the stay is over.
 
@@ -58,6 +61,7 @@ and book it. Staff run the resort from a dashboard: bookings, rooms, prices, ser
 - A dashboard with revenue by month, occupancy and the next arrivals.
 - Bookings to confirm, complete or cancel, and rooms, prices, extras and amenities to edit,
   all reflected on the public site straight away.
+- Guests and their club tiers, which rise on their own as stays are completed.
 
 ## 📸 A look at it
 
@@ -82,7 +86,8 @@ and book it. Staff run the resort from a dashboard: bookings, rooms, prices, ser
   PostgreSQL exclusion constraint on the date range, so two guests pressing *Book* for the same
   night at the same moment can't both win. The loser gets a clear "already booked" message.
 - **Prices are frozen at booking time.** Each extra on a booking keeps the price it had that day,
-  so a new price list never rewrites an old invoice.
+  and the booking keeps the club tier and discount it was priced with, so a new price list or
+  a new tier never rewrites an old invoice.
 - **Typed from the database to the button.** The frontend's API types are generated from the
   OpenAPI schema, so a backend change that breaks the site fails the type check, not the guest.
 - **The server looks after itself.** On every start the API container runs its migrations and,

@@ -9,7 +9,7 @@ interface LogoProps {
 }
 
 /** A sun over the sea line, drawn to sit next to the wordmark. */
-function SunMark({ className }: { className?: string }) {
+export function SunMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 40 28" fill="none" aria-hidden="true" className={className}>
       <path

@@ -189,7 +189,8 @@ export interface paths {
     put?: never
     /**
      * Price a stay without booking it
-     * @description Public: the price breakdown shown before the guest confirms.
+     * @description Public: the price breakdown shown before the guest confirms. With a token, it includes
+     *     the guest's club discount.
      */
     post: operations['quote_api_v1_bookings_quote_post']
     delete?: never
@@ -267,6 +268,43 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/api/v1/membership/tiers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Club tiers, lowest first
+     * @description Public: the nights each tier needs and the discount it gives on room nights.
+     */
+    get: operations['list_tiers_api_v1_membership_tiers_get']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/membership/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /** The signed-in guest's club card */
+    get: operations['read_my_membership_api_v1_membership_me_get']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/api/v1/admin/stats': {
     parameters: {
       query?: never
@@ -328,6 +366,23 @@ export interface paths {
     /** All accounts */
     get: operations['list_users_api_v1_admin_users_get']
     put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/api/v1/admin/users/{user_id}/membership': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    /** Set a guest's club tier */
+    put: operations['set_membership_api_v1_admin_users__user_id__membership_put']
     post?: never
     delete?: never
     options?: never
@@ -471,6 +526,9 @@ export interface components {
       children: number
       /** Total Price */
       total_price: string
+      member_tier: components['schemas']['MembershipTier'] | null
+      /** Member Discount */
+      member_discount: string
       /** Special Requests */
       special_requests: string | null
       /**
@@ -592,6 +650,13 @@ export interface components {
       price_per_night: string
       /** Room Total */
       room_total: string
+      /** @description The signed-in guest's club tier; empty when nobody is signed in */
+      member_tier: components['schemas']['MembershipTier'] | null
+      /**
+       * Member Discount
+       * @description Taken off the room nights for club members
+       */
+      member_discount: string
       /** Services */
       services: components['schemas']['QuoteLine'][]
       /** Total */
@@ -622,6 +687,9 @@ export interface components {
       children: number
       /** Total Price */
       total_price: string
+      member_tier: components['schemas']['MembershipTier'] | null
+      /** Member Discount */
+      member_discount: string
       /** Special Requests */
       special_requests: string | null
       /**
@@ -718,10 +786,39 @@ export interface components {
       database: 'ok' | 'unavailable'
     }
     /**
+     * MembershipRead
+     * @description The signed-in guest's club card and progress to the next tier.
+     */
+    MembershipRead: {
+      tier: components['schemas']['MembershipTier']
+      /** Discount Percent */
+      discount_percent: number
+      /** Completed Nights */
+      completed_nights: number
+      next_tier: components['schemas']['MembershipTier'] | null
+      /** Next Tier Nights */
+      next_tier_nights: number | null
+      /** Nights To Next */
+      nights_to_next: number | null
+      /** Member Number */
+      member_number: string
+      /** Member Name */
+      member_name: string
+      /**
+       * Member Since
+       * Format: date
+       */
+      member_since: string
+    }
+    /**
      * MembershipTier
      * @enum {string}
      */
     MembershipTier: 'silver' | 'gold' | 'platinum'
+    /** MembershipUpdate */
+    MembershipUpdate: {
+      tier: components['schemas']['MembershipTier']
+    }
     /** MonthlyRevenue */
     MonthlyRevenue: {
       /** Month */
@@ -1177,6 +1274,14 @@ export interface components {
        * @default []
        */
       services: components['schemas']['ServiceSelection'][]
+    }
+    /** TierRead */
+    TierRead: {
+      tier: components['schemas']['MembershipTier']
+      /** Min Nights */
+      min_nights: number
+      /** Discount Percent */
+      discount_percent: number
     }
     /** TokenResponse */
     TokenResponse: {
@@ -1862,6 +1967,46 @@ export interface operations {
       }
     }
   }
+  list_tiers_api_v1_membership_tiers_get: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['TierRead'][]
+        }
+      }
+    }
+  }
+  read_my_membership_api_v1_membership_me_get: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['MembershipRead']
+        }
+      }
+    }
+  }
   dashboard_api_v1_admin_stats_get: {
     parameters: {
       query?: never
@@ -2042,6 +2187,68 @@ export interface operations {
       }
       /** @description Not an admin */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Validation Error */
+      422: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['HTTPValidationError']
+        }
+      }
+    }
+  }
+  set_membership_api_v1_admin_users__user_id__membership_put: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        user_id: number
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MembershipUpdate']
+      }
+    }
+    responses: {
+      /** @description Successful Response */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserRead']
+        }
+      }
+      /** @description Not signed in */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Not an admin */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Guest not found */
+      404: {
         headers: {
           [name: string]: unknown
         }

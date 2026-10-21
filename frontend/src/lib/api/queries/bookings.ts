@@ -1,13 +1,14 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { client, unwrap } from '../client'
-import type { BookingCreate, ReviewCreate, StayRequest } from '../types'
+import type { BookingCreate, MembershipTier, ReviewCreate, StayRequest } from '../types'
 import { keys } from './keys'
 
-/** Live price for a stay. Pass null while the form is incomplete. */
-export const useQuote = (request: StayRequest | null) =>
+/** Live price for a stay. Pass null while the form is incomplete, and the guest's tier
+ * (if signed in) so the price is fetched again when it changes. */
+export const useQuote = (request: StayRequest | null, tier?: MembershipTier) =>
   useQuery({
-    queryKey: keys.quote(request ?? {}),
+    queryKey: keys.quote(request ?? {}, tier),
     queryFn: ({ signal }) =>
       unwrap(client.POST('/api/v1/bookings/quote', { body: request!, signal })),
     enabled: request !== null,
