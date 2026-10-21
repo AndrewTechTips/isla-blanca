@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, type MotionValue } from 'motion/react'
+import { motion, type MotionValue, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { useRef } from 'react'
 
 import { Eyebrow } from '@/components/ui/Eyebrow'
@@ -36,16 +36,25 @@ function CollagePhoto({
   progress: MotionValue<number>
 }) {
   const start = scatter[index % scatter.length]
-  const opacity = useTransform(progress, [0, 1], [0.5, 1])
-  const rotate = useTransform(progress, [0, 1], [start.rotate, 0])
-  const scale = useTransform(progress, [0, 1], [start.scale, 1])
-  const x = useTransform(progress, [0, 1], [start.x, 0])
-  const y = useTransform(progress, [0, 1], [start.y, 0])
+  const reduceMotion = useReducedMotion()
+  // Progress 0.5 is the grid's centre at the screen's centre: the photos settle there and hold.
+  // One `transform` (and opacity) lets Motion run this on the browser's scroll timeline.
+  const opacity = useTransform(progress, [0, 0.5], reduceMotion ? [1, 1] : [0.5, 1])
+  const transform = useTransform(
+    progress,
+    [0, 0.5],
+    reduceMotion
+      ? ['translateX(0px)', 'translateX(0px)']
+      : [
+          `translateX(${start.x}px) translateY(${start.y}px) rotate(${start.rotate}deg) scale(${start.scale})`,
+          'translateX(0px) translateY(0px) rotate(0deg) scale(1)',
+        ],
+  )
 
   return (
     <motion.figure
       className={cn('overflow-hidden rounded-lg shadow-xl shadow-black/10', layout[index])}
-      style={{ opacity, rotate, scale, x, y }}
+      style={{ opacity, transform }}
     >
       <img
         {...photo(src, '(min-width: 810px) 40vw, 100vw')}
@@ -67,13 +76,17 @@ export function GalleryCollage({
   headingLevel = 'h2',
 }: GalleryCollageProps) {
   const ref = useRef<HTMLDivElement>(null)
-  // 0 when the grid's top enters the viewport, 1 when its centre reaches the centre.
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'center center'] })
+  // 0 when the grid's top enters the viewport, 0.5 when its centre reaches the centre, 1 when it
+  // has left: the whole pass, which the browser can track natively (a "cover" view timeline).
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const Heading = headingLevel
 
   return (
+    // `overflow-clip`, not `overflow-hidden`: it crops the scattered photos the same way, but a
+    // hidden overflow makes the section a scroll container, and the photos' native scroll
+    // timeline would then follow the section (which never scrolls) instead of the page.
     <section
-      className="overflow-hidden bg-cream sketch-bg section-y"
+      className="overflow-clip bg-cream sketch-bg section-y"
       style={sketch('/images/home/gallery-section-bg.jpg')}
     >
       <div className="container-site space-y-12">

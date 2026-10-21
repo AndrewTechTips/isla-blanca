@@ -1,12 +1,12 @@
 import { Star } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useInView } from 'motion/react'
 import { useEffect, useRef, useState } from 'react'
 
 import { testimonials } from '@/data/content'
 import { useParallax } from '@/hooks/useParallax'
 import { cn } from '@/lib/cn'
 import { photo } from '@/lib/images'
-import { inViewOnce, spring, tween } from '@/lib/motion'
+import { inViewOnce, spring, tween, useMove } from '@/lib/motion'
 
 const ROTATE_EVERY_MS = 7000
 
@@ -16,14 +16,21 @@ export function Reviews() {
   const section = useRef<HTMLElement>(null)
   // The photo is taller than the section and drifts slower than the page.
   const photoY = useParallax(section, '-12%', '12%')
+  const move = useMove()
+
+  // Quotes only rotate while the section is on screen. Their blur-to-sharp change can't run on
+  // the compositor, so a carousel turning out of sight would keep the main thread busy while the
+  // visitor scrolls the rest of the page.
+  const onScreen = useInView(section)
 
   useEffect(() => {
+    if (!onScreen) return
     const timer = window.setTimeout(
       () => setActive((current) => (current + 1) % testimonials.length),
       ROTATE_EVERY_MS,
     )
     return () => window.clearTimeout(timer)
-  }, [active])
+  }, [active, onScreen])
 
   const review = testimonials[active]
 
@@ -34,14 +41,17 @@ export function Reviews() {
       aria-roledescription="carousel"
       aria-label="Guest reviews"
     >
-      <motion.div className="absolute inset-x-0 -top-[15%] -z-20 h-[130%]" style={{ y: photoY }}>
+      <motion.div
+        className="absolute inset-x-0 -top-[15%] -z-20 h-[130%]"
+        style={{ transform: photoY }}
+      >
         <motion.img
           {...photo('/images/home/reviews-bg.jpg')}
           alt=""
           loading="lazy"
           className="size-full object-cover"
-          initial={{ scale: 1.2 }}
-          whileInView={{ scale: 1 }}
+          initial={move('scale(1.2)')}
+          whileInView={move('scale(1)')}
           viewport={inViewOnce}
           transition={tween(4)}
         />
@@ -62,8 +72,8 @@ export function Reviews() {
             >
               <motion.blockquote
                 className="text-quote"
-                initial={{ y: 30 }}
-                animate={{ y: 0 }}
+                initial={move('translateY(30px)')}
+                animate={move('translateY(0px)')}
                 transition={spring(2, 0.3, 0.1)}
               >
                 “{review.quote}”
@@ -71,8 +81,8 @@ export function Reviews() {
               <motion.div
                 className="flex gap-1 text-gold"
                 role="img"
-                initial={{ y: 40 }}
-                animate={{ y: 0 }}
+                initial={move('translateY(40px)')}
+                animate={move('translateY(0px)')}
                 transition={spring(2, 0.2, 0.2)}
                 aria-label="5 out of 5 stars"
               >
@@ -82,8 +92,8 @@ export function Reviews() {
               </motion.div>
               <motion.figcaption
                 className="text-caption font-black text-sand uppercase"
-                initial={{ y: 40 }}
-                animate={{ y: 0 }}
+                initial={move('translateY(40px)')}
+                animate={move('translateY(0px)')}
                 transition={spring(2, 0.2, 0.3)}
               >
                 {review.author} – {review.source}

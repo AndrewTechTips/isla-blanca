@@ -10,7 +10,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { site } from '@/data/site'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { photo } from '@/lib/images'
-import { hero, tween } from '@/lib/motion'
+import { hero, tween, useMove } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
 const fieldClass =
@@ -89,6 +89,7 @@ function ContactForm() {
 
 export function ContactPage() {
   usePageTitle('Contact')
+  const move = useMove()
 
   return (
     <>
@@ -97,8 +98,8 @@ export function ContactPage() {
           {...photo('/images/gallery/gallery-05.jpg')}
           alt=""
           className="absolute inset-0 -z-10 size-full object-cover"
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
+          initial={move('scale(1.2)')}
+          animate={move('scale(1)')}
           transition={hero.photo}
         />
         <div className="container-site">

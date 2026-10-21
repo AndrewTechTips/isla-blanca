@@ -5,7 +5,7 @@ import { Faq } from '@/components/sections/Faq'
 import { Reviews } from '@/components/sections/Reviews'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { usePageTitle } from '@/hooks/usePageTitle'
-import { useRooms } from '@/lib/api/queries/catalog'
+import { roomSearch, useRooms } from '@/lib/api/queries/catalog'
 import { formatGuests } from '@/lib/format'
 import { sketch } from '@/lib/sketch'
 
@@ -15,12 +15,11 @@ const formatDate = (iso: string) =>
 export function RoomsPage() {
   usePageTitle('Rooms')
   const [searchParams] = useSearchParams()
-  const checkIn = searchParams.get('check_in') ?? undefined
-  const checkOut = searchParams.get('check_out') ?? undefined
-  const guests = Number(searchParams.get('guests')) || undefined
+  const filters = roomSearch(searchParams)
+  const { check_in: checkIn, check_out: checkOut, guests } = filters
   const search = searchParams.toString()
 
-  const rooms = useRooms({ check_in: checkIn, check_out: checkOut, guests, size: 24 })
+  const rooms = useRooms(filters)
 
   return (
     <>
@@ -65,6 +64,7 @@ export function RoomsPage() {
                     room={room}
                     index={index % 3}
                     search={search ? `?${search}` : ''}
+                    priority={index === 0 ? 'high' : index < 3 ? 'eager' : undefined}
                   />
                 ))}
           </div>

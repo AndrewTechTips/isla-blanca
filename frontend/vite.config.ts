@@ -17,6 +17,12 @@ export default defineConfig({
     // Same-origin API calls in development: no CORS, no hard-coded backend URL.
     proxy: { '/api': 'http://localhost:8000' },
   },
+  // `vite preview` serves the production build the same way, for performance checks.
+  preview: {
+    port: 4173,
+    strictPort: true,
+    proxy: { '/api': 'http://localhost:8000' },
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],

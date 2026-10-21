@@ -113,15 +113,27 @@ picks an arrival and then a departure date and goes on to `/book/:slug` with the
 ## Motion and scrolling
 
 - **Smooth scrolling** with Lenis (`lib/smoothScroll.ts`). It keeps native
-  scrolling underneath, so scroll restoration and Motion's scroll effects keep working. Dialogs
-  and the mobile menu lock the page while open (`useScrollLock`).
+  scrolling underneath, so scroll restoration and Motion's scroll effects keep working. Lenis
+  runs inside Motion's frame loop, so there is one animation loop and every scroll-linked
+  effect reads the position of the same frame. Dialogs and the mobile menu lock the page while
+  open (`useScrollLock`).
 - **Page transitions**: each new page fades in. The page a visitor lands on appears at once, and
   moving between tabs of the account or staff area keeps their layout still.
 - **Parallax** (`useParallax`): the hero photo sinks as the page scrolls over it, the reviews
   photo drifts behind its section, and the framed video in About rises a little faster than
   the text beside it.
+- **Off the main thread.** Movement is animated as one `transform` (plus `opacity`), never as
+  separate `x`/`y`/`scale` values, because Motion only hands `transform` and `opacity` to the
+  browser:
+  - entrance animations (`Reveal`, room cards, `FlipIn` icons, word reveals) run as Web
+    Animations on the compositor, so ten room cards springing in no longer restyle the page on
+    every frame;
+  - scroll-linked effects (parallax, the gallery collage) are attached to native scroll
+    timelines where the browser has them (Chrome, Edge, Safari 26), so they stay glued to the
+    scroll even on a busy phone, and fall back to Motion's JavaScript tracking elsewhere.
+  `useMove()` in `lib/motion.ts` builds these transforms and leaves them out for "reduce motion".
 - With the operating system's "reduce motion" setting on, there is no smooth scrolling, no
-  parallax and Motion skips its animations.
+  parallax and no movement: elements only fade in.
 
 ## Accessibility
 
@@ -150,31 +162,67 @@ picks an arrival and then a departure date and goes on to `/book/:slug` with the
 
 ## Performance
 
+Measured, not guessed: a scroll benchmark (Chrome, a real window with vsync, page scrolled top to
+bottom, phone run with the CPU slowed 4×) records frame times and how busy the main thread is,
+and Lighthouse runs on the production build. Every change below was kept only if those numbers
+improved and the page looked the same (old and new screenshots compared side by side, and the
+scroll-linked elements checked to sit within 1 px of where they were).
+
+**Loading**
 - Every page except Home is lazy-loaded. React, Motion and the 360° viewer are separate chunks
-  that browsers cache across deploys.
-- The 360° tour (Photo Sphere Viewer + three.js, ~630 kB) downloads only when a visitor presses
-  "Start the 360° tour"; until then the room page shows a small preview image.
-- **Images**: every photo has WebP copies 800 and 1600 px wide (`npm run images` after adding
-  one). `photo(src, sizes)` from `lib/images.ts` returns `src`, `srcSet` and `sizes`, so phones
-  download a ~50 kB WebP instead of a ~400 kB JPEG. The sketch backgrounds use the same copies.
-- The home hero photo is preloaded with high priority; Google Fonts load without blocking the
-  first paint.
+  that browsers cache across deploys. The 360° tour (Photo Sphere Viewer + three.js, ~630 kB)
+  downloads only when a visitor presses "Start the 360° tour".
+- **Data in parallel with code**: the router starts a page's main request (the room list, a
+  room) while the page's chunk is still downloading (`loader` in `app/router.tsx`), instead of
+  after it has rendered. The booking bar and the featured rooms share one room-list request.
+- **Next pages ahead of time** (`app/prefetch.ts`): a page's code is fetched as soon as the
+  pointer is over a link to it (or a finger touches one), and all public pages a few seconds
+  after load, when the browser is idle. Skipped in "save data" mode.
+- **Images**: every photo has WebP copies 400, 800, 1200 and 1600 px wide (`npm run images`).
+  `photo(src, sizes)` returns `src`, `srcSet`, `sizes` and `decoding="async"`, so a phone gets the
+  size it shows and a large photo coming into view is decoded off the main thread. The first
+  room cards load their photo straight away (the first with high priority); the rest wait until
+  they are near.
+- The home hero photo is preloaded only on the home page (a small script in `index.html`), so
+  other pages don't spend a phone's bandwidth on it.
+- **Fonts** are served with the site (`public/fonts`, variable woff2, Latin only) and requested
+  after the first page has painted and loaded (`lib/fonts.ts`), so they never compete with the
+  first paint or the first screen's photos. Until they arrive, local fonts resized to the same
+  metrics (`size-adjust`, `ascent-override`) stand in, so the swap doesn't move the text.
+- The About video is re-encoded (0.7 MB instead of 1.5 MB, visually the same), and only
+  downloads and plays when it is near the screen; it pauses once it has scrolled away.
 
-Lighthouse (production build, `npm run build && npm run preview`):
+**Scrolling and animation**
+- Entrance animations and scroll-linked effects run on the compositor, not the main thread
+  (see "Motion and scrolling" above), and Lenis shares Motion's frame loop.
+- The reviews carousel only turns while it is on screen: its blur-to-sharp change can't run on
+  the compositor, and a carousel turning out of sight kept every page that has it restyling on
+  every frame.
+- No backdrop blur behind the near-opaque booking bar and price badges, where it wasn't visible.
 
-| Page | Desktop: perf / a11y / best practices / SEO | Mobile performance |
-|---|---|---|
-| Home | 97 / 100 / 100 / 100 | 80 |
-| Rooms | 100 / 100 / 100 / 100 | 87 |
-| Room | 97 / 100 / 100 / 100 | 78 |
-| Gallery | 98 / 100 / 100 / 100 | 87 |
-| Services | 97 / 100 / 100 / 100 | 79 |
-| Contact | 91 / 100 / 100 / 100 | 74 |
-| Sign in | 99 / 100 / 100 / 100 | 93 |
+Lighthouse on a phone, production build (`npm run build && npm run preview`), median of three
+runs with real network and CPU throttling (DevTools), before and after the performance work:
 
-On a throttled phone the largest element is usually the hero title, and the design brings it
-in with a 0.5 s delay and a 2 s fade, which Lighthouse counts in Largest Contentful Paint.
-Accessibility, best practices and SEO are 100 on mobile too.
+| Page | Score | First paint | Largest paint | Layout shift | Speed Index | Transfer |
+|---|---|---|---|---|---|---|
+| Home | 76 → 83 | 3.08 → 2.77 s | 4.72 → 3.92 s | 0.053 → 0.006 | 3.79 → 3.47 s | 2264 → 715 kB |
+| Rooms | 68 → 74 | 3.58 → 3.26 s | 6.01 → 4.89 s | 0 → 0 | 4.70 → 4.09 s | 772 → 753 kB |
+| Room | 71 → 75 | 3.56 → 3.44 s | 4.77 → 4.55 s | 0.018 → 0 | 5.65 → 4.62 s | 603 → 569 kB |
+| Services | 70 → 77 | 3.62 → 3.28 s | 5.24 → 4.43 s | 0.001 → 0 | 5.02 → 4.23 s | 623 → 595 kB |
+| Gallery | 67 → 71 | 3.56 → 3.26 s | 6.32 → 5.46 s | 0 → 0.001 | 4.85 → 4.53 s | 919 → 900 kB |
+| Club | 71 → 79 | 3.68 → 3.34 s | 4.90 → 3.96 s | 0.049 → 0.009 | 4.84 → 4.21 s | 440 → 408 kB |
+| Contact | 72 → 79 | 3.58 → 3.31 s | 4.83 → 3.92 s | 0.001 → 0.001 | 5.22 → 4.63 s | 915 → 895 kB |
+
+With Lighthouse's default simulated throttling (what PageSpeed Insights shows) the phone scores
+are 86–93 (Rooms 78, where the simulation and the real-throttling run disagree), and desktop is
+98–100 on every page.
+
+Scrolling a whole page on a phone (CPU slowed 4×), the main thread is busy 15% of the time on
+Home (was 22%), 33% on Rooms (was 47%) and 14% on a room page (was 17%); at rest it now does no
+work at all (the reviews carousel used to restyle every page that has it on every frame).
+
+On a throttled phone the largest element is often the hero text, which the design brings in
+with a delay and a 2 s fade; Lighthouse counts that in Largest Contentful Paint.
 
 ## Running and testing
 

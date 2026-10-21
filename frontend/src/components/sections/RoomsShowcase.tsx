@@ -2,7 +2,7 @@ import { Reveal } from '@/components/motion/Reveal'
 import { RoomCard, RoomCardSkeleton } from '@/components/rooms/RoomCard'
 import { ArrowLink } from '@/components/ui/ArrowLink'
 import { Eyebrow } from '@/components/ui/Eyebrow'
-import { useRooms } from '@/lib/api/queries/catalog'
+import { ALL_ROOMS, useRooms } from '@/lib/api/queries/catalog'
 import { spring } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
@@ -14,7 +14,7 @@ interface RoomsShowcaseProps {
 
 /** "Featured Rooms" on the home page, "Other Rooms" on a room page. */
 export function RoomsShowcase({ title = 'Featured Rooms', excludeSlug }: RoomsShowcaseProps) {
-  const rooms = useRooms({ size: 4 })
+  const rooms = useRooms(ALL_ROOMS)
   const items = rooms.data?.items.filter((room) => room.slug !== excludeSlug).slice(0, 3)
 
   return (

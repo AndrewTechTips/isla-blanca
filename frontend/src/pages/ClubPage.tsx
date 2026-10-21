@@ -13,7 +13,7 @@ import { usePageTitle } from '@/hooks/usePageTitle'
 import { useTiers } from '@/lib/api/queries/membership'
 import type { TierInfo } from '@/lib/api/types'
 import { cn } from '@/lib/cn'
-import { hero, inViewOnce, spring } from '@/lib/motion'
+import { hero, inViewOnce, spring, useMove } from '@/lib/motion'
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI']
 
@@ -43,6 +43,7 @@ function ClubAction({ tone = 'gold' }: { tone?: 'gold' | 'sage' }) {
 }
 
 function ClubHero() {
+  const move = useMove()
   return (
     <section className="relative isolate overflow-hidden bg-forest text-sand">
       <div className="grain absolute inset-0 -z-10 opacity-60" />
@@ -76,8 +77,13 @@ function ClubHero() {
               key={card.tier}
               className="absolute inset-x-[21%] top-[18%] md:inset-x-[18%] md:top-[22%]"
               style={{ zIndex: card.z }}
-              initial={{ opacity: 0, y: '60%', rotate: 0, x: '0%' }}
-              animate={{ opacity: 1, y: card.y, rotate: card.rotate, x: card.x }}
+              initial={move('translateX(0%) translateY(60%) rotate(0deg)', { opacity: 0 })}
+              animate={move(
+                `translateX(${card.x}) translateY(${card.y}) rotate(${card.rotate}deg)`,
+                {
+                  opacity: 1,
+                },
+              )}
               transition={spring(1.6, 0.25, card.delay)}
             >
               <MemberCard tier={card.tier} name="Isla Blanca Guest" interactive={false} />
@@ -200,6 +206,7 @@ function HowItWorks() {
 }
 
 function Benefits() {
+  const move = useMove()
   return (
     <section className="bg-forest py-16 lg:py-30">
       <div className="container-site space-y-12">
@@ -212,8 +219,8 @@ function Benefits() {
             <motion.article
               key={benefit.title}
               className="relative space-y-3 border border-gold/40 p-8"
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={move('translateY(30px)', { opacity: 0 })}
+              whileInView={move('translateY(0px)', { opacity: 1 })}
               viewport={inViewOnce}
               transition={spring(1.6, 0.2, (index % 3) * 0.15)}
             >

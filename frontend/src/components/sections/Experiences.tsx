@@ -1,5 +1,6 @@
 import { motion } from 'motion/react'
 
+import { FlipIn } from '@/components/motion/FlipIn'
 import { ButtonLink } from '@/components/ui/Button'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { MaskIcon } from '@/components/ui/MaskIcon'
@@ -18,16 +19,9 @@ function ExperienceCard({ icon, title, text }: (typeof experiences)[number]) {
     <article className="relative flex min-h-[380px] flex-col items-center justify-center gap-4 border border-gold/40 px-8 py-16 text-center lg:min-h-[440px]">
       {/* Inner frame line, offset to read as a double border. */}
       <div aria-hidden="true" className="absolute inset-2 border border-gold/15" />
-      <motion.div
-        className="grid size-14 place-items-center rounded-full border border-gold/50 text-gold"
-        style={{ transformPerspective: 600 }}
-        initial={{ rotateY: 90 }}
-        whileInView={{ rotateY: 0 }}
-        viewport={inViewOnce}
-        transition={spring(2, 0.5, 0.5)}
-      >
+      <FlipIn>
         <MaskIcon name={icon} className="size-7" />
-      </motion.div>
+      </FlipIn>
       <motion.h3 className="text-subheading font-black text-sand" {...fadeIn(0.5)}>
         {title}
       </motion.h3>

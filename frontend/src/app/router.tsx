@@ -1,11 +1,25 @@
-import { createBrowserRouter } from 'react-router'
+import { createBrowserRouter, type LoaderFunctionArgs } from 'react-router'
 
 import { RootLayout, type RouteHandle } from '@/components/layout/RootLayout'
 import { PageLoader } from '@/components/ui/PageLoader'
 import { GuestOnly, RequireAdmin, RequireAuth } from '@/features/auth/guards'
+import { roomQuery, roomSearch, roomsQuery } from '@/lib/api/queries/catalog'
 import { HomePage } from '@/pages/HomePage'
 
+import { queryClient } from './queryClient'
+
 const filledNavbar: RouteHandle = { navbar: 'filled' }
+
+/**
+ * Starts a page's main request while its code is still downloading, instead of after it has
+ * rendered: the data and the chunk arrive together. The loader doesn't wait for the answer, so
+ * navigation never blocks on the API; the page reads it from the query cache.
+ */
+const prefetch =
+  (start: (args: LoaderFunctionArgs) => Promise<unknown>) => (args: LoaderFunctionArgs) => {
+    start(args).catch(() => {})
+    return null
+  }
 
 /** Turns `import('./X').then(m => m.X)` into the shape React Router's `lazy` expects. */
 const page =
@@ -26,6 +40,9 @@ export const router = createBrowserRouter(
         {
           path: 'rooms',
           handle: filledNavbar,
+          loader: prefetch(({ request }) =>
+            queryClient.prefetchQuery(roomsQuery(roomSearch(new URL(request.url).searchParams))),
+          ),
           lazy: page(
             () => import('@/pages/RoomsPage'),
             (m) => m.RoomsPage,
@@ -33,6 +50,7 @@ export const router = createBrowserRouter(
         },
         {
           path: 'rooms/:slug',
+          loader: prefetch(({ params }) => queryClient.prefetchQuery(roomQuery(params.slug ?? ''))),
           lazy: page(
             () => import('@/pages/RoomDetailPage'),
             (m) => m.RoomDetailPage,

@@ -3,9 +3,9 @@
 All images, icons and video live in `frontend/public/images/` and are served from
 `/images/...`, the same paths the database seed uses.
 
-Next to each photo, `npm run images` (in `frontend/`) writes WebP copies 800 and 1600 px wide
-(`hero-800.webp`, `hero-1600.webp`), which the site serves through `srcset`. The tables below
-list the originals only.
+Next to each photo, `npm run images` (in `frontend/`) writes WebP copies 400, 800, 1200 and
+1600 px wide (`hero-400.webp` … `hero-1600.webp`), which the site serves through `srcset`. The
+tables below list the originals only.
 
 ## Brand
 
@@ -13,8 +13,9 @@ The resort is called **Isla Blanca**, after Ibiza's nickname "la Isla Blanca" (t
 The logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacing, gold
 `#b99a6b`) next to a small sun mark.
 
-**Fonts** (all on Google Fonts)
-- Headings: Cormorant Garamond
+**Fonts** (SIL Open Font License), served from `frontend/public/fonts/` as variable woff2 files,
+Latin only, taken from the `@fontsource-variable` packages; `fonts.css` declares them.
+- Headings: Cormorant Garamond (upright and italic)
 - Body: Manrope
 - UI / small text: Inter
 
@@ -40,15 +41,15 @@ The logo is set as text in Cormorant Garamond (`ISLA BLANCA`, wide letter-spacin
 | File | Use |
 |---|---|
 | `signature.svg` | Home › About: "Guest Experience Manager" signature |
-| `noise-texture.png` | Grain overlay on top of hero photos (256×256 tile) |
+| `noise-texture.webp` | Grain overlay on top of hero photos (256×256 tile, lossless) |
 
 ### `home/`
 | File | Size | Use |
 |---|---|---|
 | `hero.jpg` | 2720×1760 | Home hero background |
 | `about-bg.jpg` | 1672×854 | Line-art background of Home › About, Services › Intro, Contact › Info and the 404 page |
-| `about-video.mp4` | 720×1280, 1.5 MB | Home › About: video in the rounded frame |
-| `about-video-poster.jpg` | 720×1280 | Poster frame for `about-video.mp4` |
+| `about-video.mp4` | 720×1280, 0.7 MB | Home › About: video in the rounded frame (H.264, re-encoded at CRF 26, SSIM 0.986 to the source) |
+| `about-video-poster.webp` | 640×1138 | Poster frame for `about-video.mp4` |
 | `rooms-section-bg.jpg` | 1755×896 | Line-art background of the rooms sections and the Rooms page |
 | `gallery-section-bg.jpg` | 1536×1024 | Line-art background of the gallery collage |
 | `reviews-bg.jpg` | 2720×1760 | Guest reviews section background |
@@ -90,6 +91,6 @@ Single-color line icons, painted with CSS `mask` so they take the current text c
 
 ## Optimisation
 
-- Photos are JPEG (quality 82) with WebP copies at 800 and 1600 px for `srcset`.
+- Photos are JPEG (quality 82) with WebP copies at 400, 800, 1200 and 1600 px for `srcset`.
 - The panorama is 4096×2048, the largest texture size every GPU supports.
 - Media files carry no editing metadata.

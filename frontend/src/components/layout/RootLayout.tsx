@@ -4,6 +4,7 @@ import { ScrollRestoration, useLocation, useMatches, useOutlet } from 'react-rou
 
 import { Footer } from '@/components/layout/Footer'
 import { Navbar, type NavbarVariant } from '@/components/layout/Navbar'
+import { loadFonts } from '@/lib/fonts'
 import { tween } from '@/lib/motion'
 import { startSmoothScroll } from '@/lib/smoothScroll'
 
@@ -35,6 +36,8 @@ export function RootLayout() {
   const [landingKey] = useState(key)
 
   useEffect(startSmoothScroll, [])
+  // After the first page has been committed, so the fonts never delay the first paint.
+  useEffect(loadFonts, [])
 
   return (
     // Respect the visitor's "reduce motion" setting for every animation in the app.

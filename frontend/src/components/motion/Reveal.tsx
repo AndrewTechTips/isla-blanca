@@ -1,4 +1,4 @@
-import { motion, type Transition } from 'motion/react'
+import { motion, type Transition, useReducedMotion } from 'motion/react'
 import type { ElementType, ReactNode } from 'react'
 
 import { inViewOnce, spring } from '@/lib/motion'
@@ -16,7 +16,11 @@ interface RevealProps {
   as?: 'div' | 'section' | 'li' | 'p' | 'span' | 'h1' | 'h2' | 'h3'
 }
 
-/** Fades (and optionally slides or scales) its content in, once. */
+/** Fades (and optionally slides or scales) its content in, once.
+ *
+ * The movement is animated as one `transform`, which Motion hands to the browser (WAAPI), so it
+ * runs on the compositor instead of the main thread while the page scrolls. Visitors who ask for
+ * reduced motion get the fade only. */
 export function Reveal({
   children,
   className,
@@ -27,8 +31,12 @@ export function Reveal({
   as = 'div',
 }: RevealProps) {
   const Component = motion[as] as ElementType
-  const hidden = { opacity: 0, y, scale }
-  const shown = { opacity: 1, y: 0, scale: 1 }
+  const still = useReducedMotion() || (y === 0 && scale === 1)
+  const hidden = still
+    ? { opacity: 0 }
+    : { opacity: 0, transform: `translateY(${y}px) scale(${scale})` }
+  // The end state is spelled out: Motion would read `none` as zero for every function, scale(0).
+  const shown = still ? { opacity: 1 } : { opacity: 1, transform: 'translateY(0px) scale(1)' }
 
   return (
     <Component

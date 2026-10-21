@@ -19,10 +19,11 @@ import { useRoom } from '@/lib/api/queries/catalog'
 import type { RoomDetail } from '@/lib/api/types'
 import { formatBed, formatGuests, formatPrice } from '@/lib/format'
 import { photo } from '@/lib/images'
-import { inViewOnce, spring } from '@/lib/motion'
+import { inViewOnce, spring, useMove } from '@/lib/motion'
 
 function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
   const [main, ...rest] = room.images
+  const move = useMove()
 
   return (
     <section className="section-y">
@@ -99,8 +100,8 @@ function RoomInfo({ room, bookHref }: { room: RoomDetail; bookHref: string }) {
                 <motion.li
                   key={amenity.id}
                   className="flex flex-col items-center gap-4 rounded-lg bg-white/60 px-4 py-10 text-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={move('translateY(20px)', { opacity: 0 })}
+                  whileInView={move('translateY(0px)', { opacity: 1 })}
                   viewport={inViewOnce}
                   transition={spring(1.2, 0.2, (index % 4) * 0.1)}
                 >

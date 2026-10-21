@@ -4,7 +4,7 @@ import { GalleryCollage } from '@/components/sections/GalleryCollage'
 import { galleryImages } from '@/data/content'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { photo } from '@/lib/images'
-import { inViewOnce, spring } from '@/lib/motion'
+import { inViewOnce, spring, useMove } from '@/lib/motion'
 
 const moreImages = [
   { src: '/images/gallery/gallery-06.jpg', alt: 'Spa treatment room open to the sea' },
@@ -17,6 +17,7 @@ const moreImages = [
 
 export function GalleryPage() {
   usePageTitle('Gallery')
+  const move = useMove()
 
   return (
     <>
@@ -27,8 +28,8 @@ export function GalleryPage() {
             <motion.li
               key={image.src}
               className="mb-4 break-inside-avoid overflow-hidden rounded-lg"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={move('translateY(40px)', { opacity: 0 })}
+              whileInView={move('translateY(0px)', { opacity: 1 })}
               viewport={inViewOnce}
               transition={spring(1.5, 0.2, (index % 3) * 0.15)}
             >

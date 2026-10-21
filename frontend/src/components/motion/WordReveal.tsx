@@ -1,6 +1,6 @@
 import { motion } from 'motion/react'
 
-import { inViewOnce, spring } from '@/lib/motion'
+import { inViewOnce, spring, useMove } from '@/lib/motion'
 
 interface WordRevealProps {
   text: string
@@ -14,6 +14,7 @@ interface WordRevealProps {
 export function WordReveal({ text, className, as = 'p', stagger = 0.05 }: WordRevealProps) {
   const Component = motion[as]
   const words = text.split(' ')
+  const move = useMove()
 
   return (
     <Component className={className} initial="hidden" whileInView="shown" viewport={inViewOnce}>
@@ -24,8 +25,8 @@ export function WordReveal({ text, className, as = 'p', stagger = 0.05 }: WordRe
             key={`${word}-${index}`}
             className="inline-block whitespace-pre"
             variants={{
-              hidden: { opacity: 0, y: 10, filter: 'blur(10px)' },
-              shown: { opacity: 1, y: 0, filter: 'blur(0px)' },
+              hidden: move('translateY(10px)', { opacity: 0, filter: 'blur(10px)' }),
+              shown: move('translateY(0px)', { opacity: 1, filter: 'blur(0px)' }),
             }}
             transition={spring(1.5, 0, 0.05 + index * stagger)}
           >

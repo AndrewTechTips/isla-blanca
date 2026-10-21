@@ -11,35 +11,26 @@
     <meta name="theme-color" content="#1e2a24" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Fonts load without blocking the first paint (they swap in when ready). -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Inter:wght@800;900&family=Manrope:wght@500;600;700;800&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Inter:wght@800;900&family=Manrope:wght@500;600;700;800&display=swap"
-      media="print"
-      onload="this.media = 'all'"
-    />
-    <noscript>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600;1,700&family=Inter:wght@800;900&family=Manrope:wght@500;600;700;800&display=swap"
-      />
-    </noscript>
-    <!-- The home hero photo is the largest thing on the first screen: fetch it straight away. -->
-    <link
-      rel="preload"
-      as="image"
-      href="/images/home/hero.jpg"
-      imagesrcset="/images/home/hero-800.webp 800w, /images/home/hero-1600.webp 1600w"
-      imagesizes="100vw"
-      fetchpriority="high"
-    />
+    <!-- Fonts are served with the site (no third-party origins) and requested by the app right
+         after its first frame (lib/fonts.ts), so they never compete with it for the first paint.
+         Until they arrive, local fonts resized to the same metrics stand in (styles/index.css). -->
+    <noscript><link rel="stylesheet" href="/fonts/fonts.css" /></noscript>
+
+    <!-- The home page opens on a full-screen photo: start fetching it before the app has loaded.
+         Same candidates as its srcset (src/lib/images.ts), so it is never downloaded twice. Other
+         pages open on something else, so they don't spend the bandwidth. -->
+    <script>
+      if (location.pathname === '%BASE_URL%') {
+        const hero = '%BASE_URL%images/home/hero'
+        const link = document.createElement('link')
+        link.rel = 'preload'
+        link.as = 'image'
+        link.fetchPriority = 'high'
+        link.imageSizes = '100vw'
+        link.imageSrcset = [400, 800, 1200, 1600].map((w) => `${hero}-${w}.webp ${w}w`).join(', ')
+        document.head.append(link)
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>

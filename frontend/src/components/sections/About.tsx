@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Reveal } from '@/components/motion/Reveal'
 import { ButtonLink } from '@/components/ui/Button'
@@ -14,6 +14,23 @@ export function About() {
   const section = useRef<HTMLElement>(null)
   // The framed video rises a little faster than the text.
   const frameY = useParallax(section, 60, -60)
+  const video = useRef<HTMLVideoElement>(null)
+
+  // The video only downloads and plays near the screen, and pauses once it has scrolled away:
+  // nothing to fetch or decode on the first screen, and no work while it can't be seen.
+  useEffect(() => {
+    const element = video.current
+    if (!element) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) element.play().catch(() => {})
+        else element.pause()
+      },
+      { rootMargin: '300px 0px' },
+    )
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <section ref={section} className="relative isolate overflow-hidden section-y">
@@ -49,17 +66,17 @@ export function About() {
         <Reveal y={40} transition={spring(2, 0.2, 0.2)} className="mx-auto w-full max-w-[340px]">
           {/* A rounded frame in the video's own 9:16 shape, inside a thin gold outline with the
               same gap all round, so the whole piece sits centered in its column. */}
-          <motion.div className="relative" style={{ y: frameY }}>
+          <motion.div className="relative" style={{ transform: frameY }}>
             <div className="aspect-[340/604] overflow-hidden rounded-[200px]">
               <video
+                ref={video}
                 className="size-full object-cover"
                 src={asset('/images/home/about-video.mp4')}
-                poster={asset('/images/home/about-video-poster.jpg')}
-                autoPlay
+                poster={asset('/images/home/about-video-poster.webp')}
                 muted
                 loop
                 playsInline
-                preload="metadata"
+                preload="none"
                 aria-label="A guest relaxing by the infinity pool"
               />
             </div>

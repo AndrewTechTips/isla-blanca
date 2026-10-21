@@ -6,7 +6,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { useParallax } from '@/hooks/useParallax'
 import { cn } from '@/lib/cn'
 import { photo } from '@/lib/images'
-import { hero } from '@/lib/motion'
+import { hero, useMove } from '@/lib/motion'
 
 interface PageHeroProps {
   image: string
@@ -33,6 +33,7 @@ export function PageHero({
   const section = useRef<HTMLElement>(null)
   // The photo sinks at a third of the scroll speed as the page moves up over it.
   const photoY = useParallax(section, '0%', '33%', 'away')
+  const move = useMove()
 
   return (
     <section
@@ -42,14 +43,14 @@ export function PageHero({
         className,
       )}
     >
-      <motion.div className="absolute inset-0 -z-20" style={{ y: photoY }}>
+      <motion.div className="absolute inset-0 -z-20" style={{ transform: photoY }}>
         <motion.img
           {...photo(image)}
           fetchPriority="high"
           alt=""
           className="size-full object-cover"
-          initial={{ scale: 1.2 }}
-          animate={{ scale: 1 }}
+          initial={move('scale(1.2)')}
+          animate={move('scale(1)')}
           transition={hero.photo}
         />
       </motion.div>

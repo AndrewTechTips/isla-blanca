@@ -101,7 +101,7 @@ Each button label is rendered twice so the text can roll up on hover.
 ### Decorative backgrounds
 The cream sections use faint line-art illustrations (palms, mountains, a Buddha statue) as
 full-section backgrounds: `home/about-bg.jpg`, `home/rooms-section-bg.jpg`,
-`home/gallery-section-bg.jpg`. A grain texture (`brand/noise-texture.png`) sits over hero photos.
+`home/gallery-section-bg.jpg`. A grain texture (`brand/noise-texture.webp`) sits over hero photos.
 
 ## Page structure
 
@@ -166,6 +166,6 @@ The standard ease `[0.44, 0, 0.56, 1]` is written as `ease`.
 
 - Each row above maps to a Motion `initial` / `whileInView` pair
   (`viewport={{ once: true }}`), and the gallery to `useScroll` + `useTransform`.
-- Load fonts from Google Fonts: Cormorant Garamond (500, 600, 700, 900, plus italic 700),
-  Manrope (500, 600, 700, 800), Inter (800, 900).
+- Fonts: Cormorant Garamond (500, 600, 700, plus italic 600 and 700), Manrope (500, 600, 700,
+  800), Inter (800, 900). The site serves them itself as variable fonts (see assets.md).
 - Each button label is duplicated for the hover roll; build it once as a `<Button>` component.

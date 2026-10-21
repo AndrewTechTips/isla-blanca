@@ -2,7 +2,7 @@ import { type FormEvent, useId, useState } from 'react'
 import { useNavigate } from 'react-router'
 
 import { Button } from '@/components/ui/Button'
-import { useRooms } from '@/lib/api/queries/catalog'
+import { ALL_ROOMS, useRooms } from '@/lib/api/queries/catalog'
 import { cn } from '@/lib/cn'
 import { addDays, today as todayISO } from '@/lib/dates'
 
@@ -39,7 +39,7 @@ export function BookingBar({ className, roomSlug }: BookingBarProps) {
   const [checkOut, setCheckOut] = useState(() => addDays(today, 17))
   const [adults, setAdults] = useState(2)
   const [children, setChildren] = useState(0)
-  const rooms = useRooms({ size: 50 })
+  const rooms = useRooms(ALL_ROOMS)
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault()
@@ -61,7 +61,7 @@ export function BookingBar({ className, roomSlug }: BookingBarProps) {
     <form
       onSubmit={onSubmit}
       className={cn(
-        'grid gap-4 rounded-xl bg-forest/95 p-5 backdrop-blur-sm md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_0.55fr_0.55fr_auto] lg:items-end',
+        'grid gap-4 rounded-xl bg-forest/95 p-5 md:grid-cols-3 lg:grid-cols-[1.4fr_1fr_1fr_0.55fr_0.55fr_auto] lg:items-end',
         className,
       )}
       aria-label="Check availability"

@@ -1,6 +1,38 @@
 @import 'tailwindcss';
 
 /*
+ * The fonts themselves are in public/fonts/fonts.css, loaded without blocking the first paint
+ * (index.html). Until they arrive, these local fonts stand in, resized to the web fonts'
+ * metrics, so the text doesn't jump when the real font swaps in.
+ */
+@font-face {
+  font-family: 'Cormorant Garamond Fallback';
+  src: local('Georgia');
+  size-adjust: 88.2%;
+  ascent-override: 104.76%;
+  descent-override: 32.54%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Manrope Fallback';
+  src: local('Arial');
+  size-adjust: 100.57%;
+  ascent-override: 106%;
+  descent-override: 29.83%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.45%;
+  ascent-override: 90.16%;
+  descent-override: 22.45%;
+  line-gap-override: 0%;
+}
+
+/*
  * Design tokens (docs/design-spec.md).
  * Three layouts: phone < 810px, tablet 810–1199px, desktop ≥ 1200px.
  */
@@ -24,9 +56,9 @@
   --color-ink-soft: #5a5a5a;
   --color-black: #1c1d1c;
 
-  --font-serif: 'Cormorant Garamond', 'Cormorant Garamond Placeholder', Georgia, serif;
-  --font-sans: Manrope, 'Manrope Placeholder', system-ui, sans-serif;
-  --font-label: Inter, 'Inter Placeholder', system-ui, sans-serif;
+  --font-serif: 'Cormorant Garamond Variable', 'Cormorant Garamond Fallback', Georgia, serif;
+  --font-sans: 'Manrope Variable', 'Manrope Fallback', system-ui, sans-serif;
+  --font-label: 'Inter Variable', 'Inter Fallback', system-ui, sans-serif;
 
   --container-site: 73.75rem; /* 1180px */
 
@@ -198,7 +230,7 @@
 
 /* Film grain over photos. */
 @utility grain {
-  background-image: url('/images/brand/noise-texture.png');
+  background-image: url('/images/brand/noise-texture.webp');
   background-size: 128px;
   opacity: 0.06;
   mix-blend-mode: overlay;

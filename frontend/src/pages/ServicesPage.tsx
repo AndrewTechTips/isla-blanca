@@ -1,5 +1,4 @@
-import { motion } from 'motion/react'
-
+import { FlipIn } from '@/components/motion/FlipIn'
 import { Reveal } from '@/components/motion/Reveal'
 import { Faq } from '@/components/sections/Faq'
 import { PageHero } from '@/components/sections/PageHero'
@@ -10,7 +9,7 @@ import { experiences } from '@/data/content'
 import { usePageTitle } from '@/hooks/usePageTitle'
 import { cn } from '@/lib/cn'
 import { photo } from '@/lib/images'
-import { inViewOnce, spring } from '@/lib/motion'
+import { spring } from '@/lib/motion'
 import { sketch } from '@/lib/sketch'
 
 function Intro() {
@@ -62,16 +61,9 @@ function ExperienceRow({
         />
       </Reveal>
       <div className="flex flex-col items-center gap-4 text-center">
-        <motion.div
-          className="grid size-14 place-items-center rounded-full border border-gold/50 text-gold"
-          style={{ transformPerspective: 600 }}
-          initial={{ rotateY: 90 }}
-          whileInView={{ rotateY: 0 }}
-          viewport={inViewOnce}
-          transition={spring(2, 0.5, 0.5)}
-        >
+        <FlipIn>
           <MaskIcon name={experience.icon} className="size-7" />
-        </motion.div>
+        </FlipIn>
         <h2 className="text-subheading font-black text-sand">{experience.title}</h2>
         <p className="text-eyebrow text-gold">The Isla Blanca experience</p>
         <p className="max-w-[420px] text-sand">{experience.text}</p>

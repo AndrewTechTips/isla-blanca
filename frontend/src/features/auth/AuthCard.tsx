@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Reveal } from '@/components/motion/Reveal'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { photo } from '@/lib/images'
-import { hero } from '@/lib/motion'
+import { hero, useMove } from '@/lib/motion'
 
 /** Dark card over a full-bleed photo, the same look as the contact form. */
 export function AuthCard({
@@ -18,14 +18,15 @@ export function AuthCard({
   text: string
   children: ReactNode
 }) {
+  const move = useMove()
   return (
     <section className="relative isolate overflow-hidden pt-32 pb-16 md:min-h-svh md:pb-24">
       <motion.img
         {...photo('/images/gallery/gallery-01.jpg')}
         alt=""
         className="absolute inset-0 -z-10 size-full object-cover"
-        initial={{ scale: 1.2 }}
-        animate={{ scale: 1 }}
+        initial={move('scale(1.2)')}
+        animate={move('scale(1)')}
         transition={hero.photo}
       />
       <div className="absolute inset-0 -z-10 bg-black/30" />

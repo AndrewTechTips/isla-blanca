@@ -96,7 +96,11 @@ and book it. Staff run the resort from a dashboard: bookings, rooms, prices, ser
   dialogs, AA contrast, "reduce motion" respected everywhere. Lighthouse accessibility is 100 on
   every page.
 - **Light on the wire.** Pages load on demand, photos come as WebP sized to the screen, and the
-  heavy 360° viewer waits until it's asked for.
+  heavy 360° viewer waits until it's asked for. The next page's code is fetched while you hover
+  its link, and a page's data downloads alongside its code.
+- **Smooth, not just pretty.** Entrance animations, parallax and the gallery collage run on the
+  GPU (Web Animations and native scroll timelines), so they keep up with the scroll even on a
+  busy phone.
 
 ## 🗂️ The data model
 
