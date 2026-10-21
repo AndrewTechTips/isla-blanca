@@ -21,6 +21,7 @@ from app.schemas.booking import (
 from app.schemas.catalog import ServiceBrief
 from app.schemas.common import Page, PageParams
 from app.schemas.room import RoomBrief
+from app.services import membership
 from app.services.pagination import paginate
 from app.services.pricing import service_quantity, stay_total
 from app.services.rooms import is_available
@@ -72,7 +73,8 @@ def _selected_services(db: Session, request: StayRequest) -> list[tuple[Service,
     return selected
 
 
-def quote(db: Session, request: StayRequest) -> BookingQuote:
+def quote(db: Session, request: StayRequest, user: User | None = None) -> BookingQuote:
+    """Price a stay. Signed-in guests get their club discount on the room nights."""
     room = _bookable_room(db, request.room_id)
     if request.guests > room.max_guests:
         raise BusinessRuleError(
@@ -88,6 +90,8 @@ def quote(db: Session, request: StayRequest) -> BookingQuote:
         for service, quantity in _selected_services(db, request)
     ]
     room_total = room.price_per_night * request.nights
+    tier = user.profile.membership_tier if user else None
+    discount = membership.room_discount(room_total, tier)
     return BookingQuote(
         room=RoomBrief.model_validate(room),
         check_in=request.check_in,
@@ -95,11 +99,14 @@ def quote(db: Session, request: StayRequest) -> BookingQuote:
         nights=request.nights,
         price_per_night=room.price_per_night,
         room_total=room_total,
+        member_tier=tier,
+        member_discount=discount,
         services=lines,
         total=stay_total(
             room.price_per_night,
             request.nights,
             [(line.unit_price, line.quantity) for line in lines],
+            discount,
         ),
     )
 
@@ -108,7 +115,7 @@ def create(db: Session, user: User, data: BookingCreate) -> Booking:
     if data.check_in < date.today():
         raise BusinessRuleError("Check-in can't be in the past.", code="check_in_in_past")
 
-    priced = quote(db, data)
+    priced = quote(db, data, user)
     if not is_available(db, data.room_id, data.check_in, data.check_out):
         raise ConflictError("The room is already booked for these dates.", code="room_unavailable")
 
@@ -121,6 +128,8 @@ def create(db: Session, user: User, data: BookingCreate) -> Booking:
         children=data.children,
         status=BookingStatus.CONFIRMED,
         total_price=priced.total,
+        member_tier=priced.member_tier,
+        member_discount=priced.member_discount,
         special_requests=data.special_requests,
         service_links=[
             BookingService(
@@ -241,5 +250,8 @@ def change_status(db: Session, reference: str, new_status: BookingStatus) -> Boo
             code="invalid_status_change",
         )
     booking.status = new_status
+    if new_status == BookingStatus.COMPLETED:
+        db.flush()
+        membership.promote(db, booking.user)
     db.commit()
     return booking

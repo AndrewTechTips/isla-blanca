@@ -17,8 +17,12 @@ def service_quantity(unit: PricingUnit, *, nights: int, guests: int) -> int:
 
 
 def stay_total(
-    price_per_night: Decimal, nights: int, service_lines: list[tuple[Decimal, int]]
+    price_per_night: Decimal,
+    nights: int,
+    service_lines: list[tuple[Decimal, int]],
+    member_discount: Decimal = Decimal(0),
 ) -> Decimal:
-    """Room price for every night plus each service line (unit price × quantity)."""
+    """Room price for every night, less the member discount, plus each service line
+    (unit price × quantity)."""
     services = sum((unit_price * quantity for unit_price, quantity in service_lines), Decimal(0))
-    return price_per_night * nights + services
+    return price_per_night * nights - member_discount + services

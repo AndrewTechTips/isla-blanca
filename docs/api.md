@@ -49,16 +49,19 @@ models/*        SQLAlchemy ORM over PostgreSQL, which enforces the final guarant
 | GET | `/rooms/{slug}/reviews` | public | Reviews, newest first |
 | GET | `/amenities` | public | Amenity list |
 | GET | `/services` | public | Active extras |
-| POST | `/bookings/quote` | public | Price breakdown for a stay |
+| POST | `/bookings/quote` | public | Price breakdown for a stay (with the club discount when signed in) |
 | POST | `/bookings` | guest | Book a room |
 | GET | `/bookings` | guest | My bookings |
 | GET | `/bookings/{reference}` | owner or admin | One booking |
 | POST | `/bookings/{reference}/cancel` | owner or admin | Cancel before arrival |
 | POST | `/bookings/{reference}/review` | owner | Review a finished stay |
+| GET | `/membership/tiers` | public | Club tiers: nights needed and discount |
+| GET | `/membership/me` | signed in | My club card: tier, number, progress to the next tier |
 | GET | `/admin/stats` | admin | Dashboard numbers |
 | GET | `/admin/bookings` | admin | All bookings, filter by status, room, guest email |
 | PATCH | `/admin/bookings/{reference}` | admin | Change status |
 | GET | `/admin/users` | admin | All accounts |
+| PUT | `/admin/users/{id}/membership` | admin | Set a guest's club tier |
 | GET, POST | `/admin/rooms` | admin | All rooms (incl. inactive), create |
 | PATCH, DELETE | `/admin/rooms/{id}` | admin | Edit (photos and amenities replaced when sent), delete |
 | GET, POST | `/admin/services` | admin | All services, create |
@@ -94,6 +97,22 @@ Lists are paginated: `{ items, total, page, size, pages }`.
 Service quantity defaults to the pricing unit: `per_stay` = 1, `per_night` = nights,
 `per_guest` = guests. The guest can override it.
 
+## Isla Blanca Club
+
+Every account is a club member (`app/services/membership.py`):
+
+| Tier | Reached after | Discount on room nights |
+|---|---|---|
+| Silver | joining | 5% |
+| Gold | 7 nights | 10% |
+| Platinum | 20 nights | 15% |
+
+- Nights count from **completed** stays. When staff mark a stay completed, the guest moves
+  up to the tier those nights earn. Tiers never go down on their own; staff can set any tier.
+- A quote sent with a token, and every booking, takes the guest's discount off the room nights
+  (services are charged in full). The booking stores the tier and the amount
+  (`member_tier`, `member_discount`), so later tier changes don't alter past prices.
+
 ## Errors
 
 Every error has the same shape:
@@ -107,6 +126,6 @@ Request validation errors keep FastAPI's standard 422 format with a list of fiel
 
 ## Tests
 
-`uv run pytest`: 74 tests against a real PostgreSQL database, covering authentication, room
+`uv run pytest`: 86 tests against a real PostgreSQL database, covering authentication, room
 search and availability, the full booking lifecycle, admin permissions and CRUD, dashboard
-numbers, the database relations and constraints, and the migrations.
+numbers, club tiers and discounts, the database relations and constraints, and the migrations.

@@ -4,7 +4,7 @@ from typing import Annotated
 
 from pydantic import Field, StringConstraints, model_validator
 
-from app.models.enums import BookingStatus
+from app.models.enums import BookingStatus, MembershipTier
 from app.schemas.catalog import ServiceBrief
 from app.schemas.common import Schema
 from app.schemas.room import RoomBrief
@@ -69,6 +69,10 @@ class BookingQuote(Schema):
     nights: int
     price_per_night: Decimal
     room_total: Decimal
+    member_tier: MembershipTier | None = Field(
+        description="The signed-in guest's club tier; empty when nobody is signed in"
+    )
+    member_discount: Decimal = Field(description="Taken off the room nights for club members")
     services: list[QuoteLine]
     total: Decimal
 
@@ -100,6 +104,8 @@ class BookingRead(Schema):
     adults: int
     children: int
     total_price: Decimal
+    member_tier: MembershipTier | None
+    member_discount: Decimal
     special_requests: str | None
     created_at: datetime
     room: RoomBrief

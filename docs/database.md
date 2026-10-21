@@ -72,6 +72,8 @@ erDiagram
         smallint children
         booking_status status "pending | confirmed | cancelled | completed"
         numeric total_price
+        membership_tier member_tier "club tier when booked"
+        numeric member_discount ">= 0, off the room nights"
         text special_requests
     }
     services {
@@ -120,10 +122,11 @@ Every table except the two link tables and `room_images` also has `created_at` a
   overlapping `[check_in, check_out)` ranges. Cancelled bookings don't count, and the checkout
   day is free for the next guest.
 - Check constraints for every numeric rule: positive prices, `check_out > check_in`, at least
-  one adult, rating between 1 and 5, quantity above zero.
+  one adult, rating between 1 and 5, quantity above zero, no negative club discount.
 - Emails are unique and stored lowercase.
 - Native PostgreSQL enums for roles, membership tiers, bed types, booking statuses and pricing
-  units.
+  units. `membership_tier` is shared by `profiles` (the guest's tier now) and `bookings` (the
+  tier the price was based on).
 - Deterministic constraint names (`pk_`, `fk_`, `uq_`, `ck_`, `ix_` prefixes), so migrations are
   readable and errors point to the exact rule that failed.
 
@@ -131,5 +134,6 @@ Every table except the two link tables and `room_images` also has `created_at` a
 
 `uv run python -m app.db.seed` (or `--reset`) creates 10 rooms with 24 photos, 8 amenities,
 5 services, an admin and two guests with profiles, and 6 bookings (completed with and without
-a review, confirmed, pending and cancelled) with dates relative to the day the seed runs. Demo
+a review, confirmed, pending and cancelled) with dates relative to the day the seed runs,
+priced with each guest's club discount. Demo
 credentials come from `.env` (see `.env.example`).

@@ -9,7 +9,7 @@ from sqlalchemy.dialects.postgresql import ExcludeConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, IdMixin, TimestampMixin
-from app.models.enums import BookingStatus, pg_enum
+from app.models.enums import BookingStatus, MembershipTier, pg_enum
 
 if TYPE_CHECKING:
     from app.models.booking_service import BookingService
@@ -34,6 +34,7 @@ class Booking(IdMixin, TimestampMixin, Base):
         CheckConstraint("adults >= 1", name="at_least_one_adult"),
         CheckConstraint("children >= 0", name="children_non_negative"),
         CheckConstraint("total_price >= 0", name="total_price_non_negative"),
+        CheckConstraint("member_discount >= 0", name="member_discount_non_negative"),
         # A room can never be double-booked: two active bookings for the same room may not
         # have overlapping date ranges. Checkout day is exclusive, so back-to-back stays work.
         ExcludeConstraint(
@@ -59,6 +60,11 @@ class Booking(IdMixin, TimestampMixin, Base):
         index=True,
     )
     total_price: Mapped[Decimal]
+    # Club tier of the guest when they booked, and what it took off the room nights.
+    member_tier: Mapped[MembershipTier | None] = mapped_column(
+        pg_enum(MembershipTier, "membership_tier")
+    )
+    member_discount: Mapped[Decimal] = mapped_column(default=0, server_default=text("0"))
     special_requests: Mapped[str | None] = mapped_column(Text)
 
     user: Mapped["User"] = relationship(back_populates="bookings")

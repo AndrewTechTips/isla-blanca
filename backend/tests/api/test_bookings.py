@@ -92,7 +92,10 @@ def test_guest_books_a_room(client: TestClient, db: Session) -> None:
     body = response.json()
     assert body["reference"].startswith("IB-")
     assert body["status"] == "confirmed"
-    assert Decimal(body["total_price"]) == Decimal("990.00")  # 250×3 + 120×2
+    # 250×3, less 5% for a Silver member, + 120×2
+    assert Decimal(body["total_price"]) == Decimal("952.50")
+    assert body["member_tier"] == "silver"
+    assert Decimal(body["member_discount"]) == Decimal("37.50")
     assert body["room"]["id"] == room.id
     assert body["services"][0]["service"]["id"] == spa.id
     assert body["can_cancel"] is True

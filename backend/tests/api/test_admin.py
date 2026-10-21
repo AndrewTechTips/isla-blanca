@@ -47,6 +47,7 @@ def admin_headers(db: Session) -> dict[str, str]:
         ("get", "/api/v1/admin/users"),
         ("post", "/api/v1/admin/rooms"),
         ("delete", "/api/v1/admin/services/1"),
+        ("put", "/api/v1/admin/users/1/membership"),
     ],
 )
 def test_admin_routes_reject_guests_and_anonymous(

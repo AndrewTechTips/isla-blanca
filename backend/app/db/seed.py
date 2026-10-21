@@ -30,6 +30,7 @@ from app.models import (
     User,
     UserRole,
 )
+from app.services import membership
 from app.services.pricing import service_quantity, stay_total
 
 
@@ -114,10 +115,16 @@ def seed(session: Session) -> None:
                     ),
                 )
             )
+        # Seeded stays are priced as the API prices them, with the guest's club discount.
+        booking.member_tier = booking.user.profile.membership_tier
+        booking.member_discount = membership.room_discount(
+            room.price_per_night * nights, booking.member_tier
+        )
         booking.total_price = stay_total(
             room.price_per_night,
             nights,
             [(line.unit_price, line.quantity) for line in booking.service_links],
+            booking.member_discount,
         )
         if review := data.get("review"):
             booking.review = Review(**review)

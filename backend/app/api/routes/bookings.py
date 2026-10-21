@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from app.api.deps import CurrentUser, DbSession, Pagination
+from app.api.deps import CurrentUser, DbSession, OptionalUser, Pagination
 from app.models import Booking
 from app.schemas.booking import BookingCreate, BookingQuote, BookingRead, ReviewCreate, StayRequest
 from app.schemas.common import ErrorResponse, Page
@@ -18,9 +18,10 @@ RULE_BROKEN = {422: {"model": ErrorResponse, "description": "A booking rule is n
     responses={404: {"model": ErrorResponse}, **RULE_BROKEN},
     summary="Price a stay without booking it",
 )
-def quote(data: StayRequest, db: DbSession) -> BookingQuote:
-    """Public: the price breakdown shown before the guest confirms."""
-    return bookings.quote(db, data)
+def quote(data: StayRequest, db: DbSession, user: OptionalUser) -> BookingQuote:
+    """Public: the price breakdown shown before the guest confirms. With a token, it includes
+    the guest's club discount."""
+    return bookings.quote(db, data, user)
 
 
 @router.post(

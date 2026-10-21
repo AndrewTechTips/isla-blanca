@@ -5,7 +5,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Query, Response, status
 
 from app.api.deps import DbSession, Pagination, require_admin
-from app.models import Amenity, Booking, BookingStatus, Room, Service
+from app.models import Amenity, Booking, BookingStatus, Room, Service, User
 from app.schemas.admin import DashboardStats
 from app.schemas.booking import AdminBookingRead, BookingStatusUpdate
 from app.schemas.catalog import (
@@ -17,9 +17,10 @@ from app.schemas.catalog import (
     ServiceUpdate,
 )
 from app.schemas.common import ErrorResponse, Page
+from app.schemas.membership import MembershipUpdate
 from app.schemas.room import RoomCreate, RoomDetail, RoomUpdate
 from app.schemas.user import UserRead
-from app.services import bookings, catalog, room_admin, rooms, stats, users
+from app.services import bookings, catalog, membership, room_admin, rooms, stats, users
 
 router = APIRouter(
     prefix="/admin",
@@ -70,6 +71,16 @@ def update_booking_status(reference: str, data: BookingStatusUpdate, db: DbSessi
 @router.get("/users", response_model=Page[UserRead], summary="All accounts")
 def list_users(db: DbSession, pagination: Pagination) -> Page[UserRead]:
     return users.list_users(db, pagination)
+
+
+@router.put(
+    "/users/{user_id}/membership",
+    response_model=UserRead,
+    responses={404: {"model": ErrorResponse, "description": "Guest not found"}},
+    summary="Set a guest's club tier",
+)
+def set_membership(user_id: int, data: MembershipUpdate, db: DbSession) -> User:
+    return membership.set_tier(db, user_id, data.tier)
 
 
 # --- Rooms -----------------------------------------------------------------------------------
