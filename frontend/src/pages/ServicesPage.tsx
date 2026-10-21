@@ -48,12 +48,17 @@ function ExperienceRow({
         transition={spring(2, 0.2, 0.2)}
         className={cn('relative mx-auto w-full max-w-[340px]', reversed && 'md:order-2')}
       >
-        <div className="absolute inset-0 translate-x-2 translate-y-2 rounded-t-full rounded-b-[170px] border border-gold/70" />
+        {/* An arched photo inside a thin gold outline with the same gap all round, so the whole
+            piece sits centered in its column. */}
         <img
           {...photo(experience.image, '340px')}
           alt=""
           loading="lazy"
-          className="relative aspect-[340/520] w-full rounded-t-full rounded-b-[170px] object-cover"
+          className="aspect-[340/520] w-full rounded-t-full object-cover"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -inset-2.5 rounded-t-full border border-gold/70"
         />
       </Reveal>
       <div className="flex flex-col items-center gap-4 text-center">
